@@ -1,0 +1,20 @@
+{
+  "name": "tms",
+  "version": "1.0.0",
+  "description": "Task Management System is an application which allows teams to effectively manage tasks.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"No tests here yet.\""
+  },
+  "author": "Xie Han Keong",
+  "license": "ISC",
+  "workspaces": [
+    "tms-all",
+    "tms-app",
+    "tms-api"
+  ],
+  "dependencies": {
+    "react": "^18.2.0"
+  }
+}
+
