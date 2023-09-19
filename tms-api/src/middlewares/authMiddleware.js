@@ -1,11 +1,10 @@
 import bcrypt from "bcryptjs"
 import jwt from "jsonwebtoken"
 
-import { validateEmail, validatePassword, validateUsername } from "tms-all/validators/userValidator.js"
-import { hasError, hasErrors } from "tms-all/validators/validators.js"
+import { User } from "@han-keong/tms-db"
+import { checkEmailNotExists, checkUsernameNotExists, validateEmail, validatePassword, validateUsername } from "@han-keong/tms-validators"
+import { hasError, hasErrors } from "@han-keong/validators"
 
-import User from "../models/User.js"
-import { checkEmailNotExists, checkUsernameNotExists } from "../validators/userValidator.js"
 import { ErrorMessage, ValidationError } from "./errorHandler.js"
 
 export async function authentication(req, res, next) {

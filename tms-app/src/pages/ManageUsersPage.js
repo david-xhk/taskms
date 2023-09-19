@@ -1,7 +1,7 @@
 import React from "react"
 import { Link, useNavigate } from "react-router-dom"
 
-import { truncate } from "tms-all/helpers/stringHelper"
+import { truncate } from "@han-keong/helpers"
 
 import useUsersTable from "../hooks/useUsersTable"
 import ProtectedPage from "./ProtectedPage"

@@ -1,8 +1,8 @@
 import React, { useEffect } from "react"
 import { useImmerReducer } from "use-immer"
 
-import { validateLoginPassword, validateLoginUsername } from "tms-all/validators/userValidator.js"
-import { deleteError, hasError } from "tms-all/validators/validators.js"
+import { validateLoginPassword, validateLoginUsername } from "@han-keong/tms-validators"
+import { deleteError, hasError } from "@han-keong/validators"
 
 import useAuth from "../hooks/useAuth"
 

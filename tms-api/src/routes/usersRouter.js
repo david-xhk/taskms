@@ -7,31 +7,10 @@ import { validateCreateUserBody, validateGetAllUsersQuery } from "../middlewares
 
 const router = Router()
 
-// Ensure user logged in and is admin
 router.use(authentication, authorization("admin"))
 
-router
-  // Endpoint: /api/users
-  .route("/")
+router.get("/", validateGetAllUsersQuery, parse("query", "active", "groups", "limit", "page", "offset"), getAllUsers)
 
-  // Target: GET /api/users
-  .get(
-    // Validate query parameters
-    validateGetAllUsersQuery,
-    // Parse query parameters
-    parse("query", "active", "groups", "limit", "page", "offset"),
-    // Call controller
-    getAllUsers
-  )
-
-  // Target: POST /api/users
-  .post(
-    // Validate body data
-    validateCreateUserBody,
-    // Parse body data
-    parse("body", "password", "active", "group-or-groups"),
-    // Call controller
-    createUser
-  )
+router.post("/", validateCreateUserBody, parse("body", "password", "active", "group-or-groups"), createUser)
 
 export default router

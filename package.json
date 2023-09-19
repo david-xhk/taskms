@@ -1,20 +1,29 @@
 {
-  "name": "tms",
-  "version": "1.0.1",
+  "name": "@han-keong/tms",
+  "version": "1.0.2",
   "description": "Task Management System is an application which allows teams to effectively manage tasks.",
-  "main": "index.js",
   "scripts": {
-    "test": "echo \"No tests here yet.\""
+    "api:ci": "npm ci -w tms-api",
+    "api:start": "npm run start -w tms-api",
+    "api:dev": "npm run dev -w tms-api",
+    "api:prod": "npm run prod -w tms-api",
+    "app:ci": "npm ci -w tms-app",
+    "app:build": "npm run build -w tms-app",
+    "app:dev": "npm run dev -w tms-app",
+    "app:prod": "npm run prod -w tms-app",
+    "dev": "npm-run-all -p api:dev app:dev",
+    "prod": "npm-run-all -p api:prod app:prod"
   },
   "author": "Xie Han Keong",
   "license": "ISC",
   "workspaces": [
-    "tms-all",
     "tms-app",
-    "tms-api"
+    "tms-api",
+    "tms-db",
+    "tms-validators"
   ],
-  "dependencies": {
-    "react": "^18.2.0"
+  "devDependencies": {
+    "npm-run-all": "^4.1.5"
   }
 }
 

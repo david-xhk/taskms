@@ -1,7 +1,6 @@
-import { validateGroup, validateGroups } from "tms-all/validators/groupValidator.js"
-import { hasError, hasErrors } from "tms-all/validators/validators.js"
+import { checkGroupNotExists, checkGroupsNotExist, validateGroup, validateGroups } from "@han-keong/tms-validators"
+import { hasError, hasErrors } from "@han-keong/validators"
 
-import { checkGroupNotExists, checkGroupsNotExist } from "../validators/groupValidator.js"
 import { ValidationError } from "./errorHandler.js"
 
 export async function validateCreateGroupsBody(req, res, next) {

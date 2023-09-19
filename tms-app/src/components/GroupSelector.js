@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState } from "react"
 import { ReactTags } from "react-tag-autocomplete"
 
-import { validateGroup } from "tms-all/validators/groupValidator"
+import { validateGroup } from "@han-keong/tms-validators"
 
 import API from "../api"
 import useAuth from "../hooks/useAuth"

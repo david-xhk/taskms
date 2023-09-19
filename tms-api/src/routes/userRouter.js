@@ -7,68 +7,18 @@ import { fetchRequestedUser, validateCheckUserGroupsQuery, validateUpdateUserBod
 
 const router = Router()
 
-// Ensure user logged in
 router.use(authentication)
 
-router
-  // Endpoint: /api/user
-  .route("/")
+router.get("/", getCurrentUser)
 
-  // Target: GET /api/user
-  .get(
-    // Call controller
-    getCurrentUser
-  )
-
-// Validate username URL parameter
 router.param("username", validateUsernameParam)
 
-router
-  // Endpoint: /api/user/:username.groups
-  .route("/:username.groups")
+router.get("/:username.groups", getUserGroups)
 
-  // Target: GET /api/user/:username.groups
-  .get(
-    // Call controller
-    getUserGroups
-  )
+router.get("/:username.checkGroup", validateCheckUserGroupsQuery, parse("query", "group-or-groups"), checkUserGroups)
 
-router
-  // Endpoint: /api/user/:username.checkGroup
-  .route("/:username.checkGroup")
+router.get("/:username", fetchRequestedUser, getUser)
 
-  // Target: GET /api/user/:username.checkGroup
-  .get(
-    // Validate query parameters
-    validateCheckUserGroupsQuery,
-    // Parse query parameters
-    parse("query", "group-or-groups"),
-    // Call controller
-    checkUserGroups
-  )
-
-router
-  // Endpoint: /api/user/:username
-  .route("/:username")
-
-  // Target: GET /api/user/:username
-  .get(
-    // Fetch user from database
-    fetchRequestedUser,
-    // Call controller
-    getUser
-  )
-
-  // Target: PUT /api/user/:username
-  .put(
-    // Fetch user from database
-    fetchRequestedUser,
-    // Validate body data
-    validateUpdateUserBody,
-    // Parse body data
-    parse("body", "password", "active", "groups"),
-    // Call controller
-    updateUser
-  )
+router.put("/:username", fetchRequestedUser, validateUpdateUserBody, parse("body", "password", "active", "groups"), updateUser)
 
 export default router

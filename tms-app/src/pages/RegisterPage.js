@@ -1,8 +1,8 @@
 import React, { useEffect } from "react"
 import { useImmerReducer } from "use-immer"
 
-import { validateEmail, validateEmailDelayed, validateEmailImmediately, validatePassword, validatePasswordDelayed, validatePasswordImmediately, validateUsername, validateUsernameDelayed, validateUsernameImmediately } from "tms-all/validators/userValidator.js"
-import { getError, getErrors, hasError, setErrors } from "tms-all/validators/validators.js"
+import { validateEmail, validateEmailDelayed, validateEmailImmediately, validatePassword, validatePasswordDelayed, validatePasswordImmediately, validateUsername, validateUsernameDelayed, validateUsernameImmediately } from "@han-keong/tms-validators"
+import { getError, getErrors, hasError, setErrors } from "@han-keong/validators"
 
 import ValidationError from "../components/ValidationError"
 import useAuth from "../hooks/useAuth"

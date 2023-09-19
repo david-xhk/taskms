@@ -1,11 +1,7 @@
-import { validateGroup, validateGroups, validateGroupsString } from "tms-all/validators/groupValidator.js"
-import { validateActive, validateEmail, validatePassword, validateUsername } from "tms-all/validators/userValidator.js"
-import { hasError, hasErrors } from "tms-all/validators/validators.js"
+import { User, UserGroup } from "@han-keong/tms-db"
+import { checkEmailNotExists, checkGroupExists, checkGroupsExist, checkUsernameNotExists, validateActive, validateEmail, validateGroup, validateGroups, validateGroupsString, validatePassword, validateUsername } from "@han-keong/tms-validators"
+import { hasError, hasErrors } from "@han-keong/validators"
 
-import User from "../models/User.js"
-import UserGroup from "../models/UserGroup.js"
-import { checkGroupExists, checkGroupsExist } from "../validators/groupValidator.js"
-import { checkEmailNotExists, checkUsernameNotExists } from "../validators/userValidator.js"
 import { ErrorMessage, ValidationError } from "./errorHandler.js"
 
 export async function validateUsernameParam(req, res, next, username) {

@@ -1,8 +1,10 @@
 import cookieParser from "cookie-parser"
 import cors from "cors"
+import dotenv from "dotenv"
 import express, { json as bodyParser, urlencoded as urlEncodedParser } from "express"
 import rateLimit from "express-rate-limit"
 import helmet from "helmet"
+import { existsSync } from "node:fs"
 
 import db from "./database.js"
 import errorHandler, { ErrorMessage } from "./middlewares/errorHandler.js"
@@ -20,10 +22,9 @@ process.on("uncaughtException", err => {
   process.exit(1)
 })
 
-if (process.env.NODE_ENV === "development") {
-  import("dotenv").then(dotenv => {
-    dotenv.config({ path: "../.env" })
-  })
+if (existsSync(".env")) {
+  console.log("Loading environment variables from file: .env")
+  dotenv.config({ path: ".env" })
 }
 
 db.connect({
@@ -62,13 +63,13 @@ app.use(cookieParser())
 // Middleware for routing requests
 app.use("/api/auth", authRouter)
 
-app.use("/api/groups", groupsRouter)
-
 app.use("/api/group", groupRouter)
 
-app.use("/api/users", usersRouter)
+app.use("/api/groups", groupsRouter)
 
 app.use("/api/user", userRouter)
+
+app.use("/api/users", usersRouter)
 
 app.get("/api", function redirectToPostmanCollection(req, res) {
   res.redirect(process.env.POSTMAN_COLLECTION_URL)

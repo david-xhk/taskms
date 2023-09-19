@@ -1,6 +1,5 @@
-import { join } from "tms-all/helpers/arrayHelper.js"
-import { sentencify } from "tms-all/helpers/stringHelper.js"
-import { getErrors } from "tms-all/validators/validators.js"
+import { join, sentencify } from "@han-keong/helpers"
+import { getErrors } from "@han-keong/validators"
 
 export class ErrorMessage extends Error {
   constructor(message, statusCode) {

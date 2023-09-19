@@ -1,4 +1,4 @@
-import Group from "../models/Group.js"
+import { Group } from "@han-keong/tms-db"
 
 export async function createGroups(req, res, next) {
   const { groups } = req.body

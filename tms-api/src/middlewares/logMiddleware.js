@@ -1,41 +1,23 @@
 export function logRequest(req, res, next) {
-  const id = getNextReqId()
-  const now = getDateTimeNow()
   const type = formatColor("HTTP", "purple")
-  let target = `${req.method} ${req.originalUrl}`
+  let line = `${req.method} ${req.originalUrl}`
   switch (req.method) {
     case "GET":
-      target = colorWords(target, "green", 2)
+      line = colorWords(line, "green", 2)
       break
     case "POST":
-      target = colorWords(target, "yellow", 2)
+      line = colorWords(line, "yellow", 2)
       break
     case "PUT":
-      target = colorWords(target, "blue", 2)
+      line = colorWords(line, "blue", 2)
       break
     case "DELETE":
-      target = colorWords(target, "red", 2)
+      line = colorWords(line, "red", 2)
       break
   }
-  let { ip } = req
-  let message = `${id}|${now}|${type}|${target}|${ip}`
-  console.log(message)
+  const { ip } = req
+  console.log(`${type}|${line}|${ip}`)
   next()
-}
-
-let reqId = 0
-
-export function getReqId() {
-  return formatColor(reqId, "cyan")
-}
-
-export function getNextReqId() {
-  return formatColor(++reqId, "cyan")
-}
-
-export function getDateTimeNow() {
-  const dateTime = new Date(Date.now()).toLocaleString()
-  return formatColor(dateTime, "yellow")
 }
 
 // Reference: https://www.codeproject.com/Tips/5255355/How-to-Put-Color-on-Windows-Console

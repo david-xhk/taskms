@@ -1,7 +1,11 @@
-import { convertToMappedAsyncValidator, createAsyncValidator } from "tms-all/validators/validators.js"
+import { Group, UserGroup } from "@han-keong/tms-db"
+import { composeAll, convertToMappedAsyncValidator, convertToMappedValidator, createAsyncValidator, hasAlphanumericOnly, isArrayLike, isCommaSeparatedString, isDefined, isString, notEmpty, notLongerThan } from "@han-keong/validators"
 
-import Group from "../models/Group.js"
-import UserGroup from "../models/UserGroup.js"
+export const validateGroup = composeAll([isDefined, isString, notEmpty, hasAlphanumericOnly, notLongerThan(50)], "group")
+
+export const validateGroups = composeAll([isDefined, isArrayLike, convertToMappedValidator(validateGroup, group => `group '${group}'`)], "groups")
+
+export const validateGroupsString = composeAll([isDefined, isCommaSeparatedString, convertToMappedValidator(validateGroup, group => `group '${group}'`)], "groups")
 
 export const checkGroupExists = createAsyncValidator(Group.groupExists, "not found", "group")
 

@@ -34,10 +34,7 @@ const config = {
     filename: "bundled.js"
   },
   plugins: [
-    new Dotenv({
-      systemvars: true,
-      path: "../.env"
-    }),
+    new Dotenv({ systemvars: true }),
     new HtmlWebpackPlugin({
       filename: "index.html",
       template: "./src/index-template.html",
@@ -45,7 +42,6 @@ const config = {
     }),
     new HtmlWebpackHarddiskPlugin()
   ],
-  mode: "development",
   module: {
     rules: [
       {
@@ -67,21 +63,19 @@ const config = {
 }
 
 if (currentTask == "webpackDev" || currentTask == "dev") {
+  config.mode = "development"
   config.devtool = "source-map"
   config.devServer = {
     port: 3000,
-    static: {
-      directory: path.join(__dirname, "src")
-    },
-    hot: true,
-    liveReload: false,
+    static: { directory: path.join(__dirname, "src") },
+    liveReload: true,
     historyApiFallback: { index: "index.html" }
   }
 }
 
 if (currentTask == "webpackBuild") {
-  config.plugins.push(new CleanWebpackPlugin(), new RunAfterCompile())
   config.mode = "production"
+  config.plugins.push(new CleanWebpackPlugin(), new RunAfterCompile())
   config.output = {
     publicPath: "/",
     path: path.resolve(__dirname, "dist"),

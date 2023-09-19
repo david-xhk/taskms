@@ -6,40 +6,10 @@ import parse from "../middlewares/parseMiddleware.js"
 
 const router = Router()
 
-router
-  // Endpoint: /api/auth/register
-  .route("/register")
+router.post("/register", validateRegisterUserBody, parse("body", "password"), registerUser)
 
-  // Target: POST /api/auth/register
-  .post(
-    // Validate body data
-    validateRegisterUserBody,
-    // Parse body data
-    parse("body", "password"),
-    // Call controller
-    registerUser
-  )
+router.post("/login", authenticateLoginUserBody, loginUser)
 
-router
-  // Endpoint: /api/auth/login
-  .route("/login")
-
-  // Target: POST /api/auth/login
-  .post(
-    // Authenticate body data
-    authenticateLoginUserBody,
-    // Call controller
-    loginUser
-  )
-
-router
-  // Endpoint: /api/auth/logout
-  .route("/logout")
-
-  // Target: GET /api/auth/logout
-  .get(
-    // Call controller
-    logoutUser
-  )
+router.get("/logout", logoutUser)
 
 export default router

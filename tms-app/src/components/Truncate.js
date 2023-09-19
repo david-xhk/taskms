@@ -1,7 +1,7 @@
 import React from "react"
 import { Tooltip } from "react-tooltip"
 
-import { truncate } from "tms-all/helpers/stringHelper"
+import { truncate } from "@han-keong/helpers"
 
 export default function Truncate(props) {
   const { length, text } = props

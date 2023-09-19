@@ -1,46 +1,20 @@
 import { Router } from "express"
 
 import { addUsersToGroup, getUsersInGroup, removeUsersFromGroup } from "../controllers/groupController.js"
-import { authorization, authentication } from "../middlewares/authMiddleware.js"
+import { authentication, authorization } from "../middlewares/authMiddleware.js"
 import { validateAddUsersToGroupBody, validateGroupParam, validateRemoveUsersFromGroupBody } from "../middlewares/groupMiddleware.js"
 import parse from "../middlewares/parseMiddleware.js"
 
 const router = Router()
 
-// Ensure user logged in and is admin
 router.use(authentication, authorization("admin"))
 
-// Validate group URL parameter
 router.param("group", validateGroupParam)
 
-router
-  // Endpoint: /api/group/:group/users
-  .route("/:group/users")
+router.get("/:group/users", getUsersInGroup)
 
-  // Target: GET /api/group/:group/users
-  .get(
-    // Call controller
-    getUsersInGroup
-  )
+router.post("/:group/users", validateAddUsersToGroupBody, parse("body", "username-or-usernames"), addUsersToGroup)
 
-  // Target: POST /api/group/:group/users
-  .post(
-    // Validate body data
-    validateAddUsersToGroupBody,
-    // Parse body data
-    parse("body", "username-or-usernames"),
-    // Call controller
-    addUsersToGroup
-  )
-
-  // Target: DELETE /api/group/:group/users
-  .delete(
-    // Validate body data
-    validateRemoveUsersFromGroupBody,
-    // Parse body data
-    parse("body", "username-or-usernames"),
-    // Call controller
-    removeUsersFromGroup
-  )
+router.delete("/:group/users", validateRemoveUsersFromGroupBody, parse("body", "username-or-usernames"), removeUsersFromGroup)
 
 export default router

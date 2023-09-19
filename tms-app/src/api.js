@@ -33,8 +33,8 @@ const endpoint = (method, url) => {
       .catch(error => {
         if (error.response) {
           callback(error.response)
-        } else {
-          console.log(error)
+        } else if (process.env.NODE_ENV === "development") {
+          console.error(error)
         }
       })
     return () => abortController.abort()

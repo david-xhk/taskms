@@ -1,5 +1,4 @@
-import User from "../models/User.js"
-import UserGroup from "../models/UserGroup.js"
+import { User, UserGroup } from "@han-keong/tms-db"
 
 export async function getAllUsers(req, res, next) {
   let { q, active, group, groups, limit, page, offset } = req.query

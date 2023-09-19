@@ -1,4 +1,4 @@
-import UserGroup from "../models/UserGroup.js"
+import { UserGroup } from "@han-keong/tms-db"
 
 export async function getUsersInGroup(req, res, next) {
   const { group } = req.params

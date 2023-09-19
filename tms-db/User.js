@@ -1,8 +1,9 @@
-import { hasIntersection } from "tms-all/helpers/arrayHelper.js"
-import db from "../database.js"
+import { hasIntersection } from "@han-keong/helpers"
+
+import Base from "./Base.js"
 import UserGroup from "./UserGroup.js"
 
-class User {
+export default class User extends Base {
   static async insertOne(username, email, password, active) {
     return await User.insertMany([{ username, email, password, active }])
   }
@@ -12,7 +13,7 @@ class User {
     const values = users.map(({ username, email, password, active }) => [username, email, password, active ?? false])
 
     return new Promise((resolve, reject) => {
-      db.query(sql, [values], (err, res) => {
+      User.query(sql, [values], (err, res) => {
         if (err) {
           reject(err)
         } else if (res.affectedRows === 0) {
@@ -32,7 +33,7 @@ class User {
     const sql = selectUsersSql("WHERE `users`.`username` IN ?")
 
     return new Promise((resolve, reject) => {
-      db.query(sql, [[usernames]], (err, res) => {
+      User.query(sql, [[usernames]], (err, res) => {
         if (err) {
           return reject(err)
         }
@@ -54,7 +55,7 @@ class User {
     const sql = selectUsersSql("WHERE `users`.`email` IN ?")
 
     return new Promise((resolve, reject) => {
-      db.query(sql, [[emails]], (err, res) => {
+      User.query(sql, [[emails]], (err, res) => {
         if (err) {
           return reject(err)
         }
@@ -76,7 +77,7 @@ class User {
     const sql = selectUsersSql("WHERE `group` IN ?")
 
     return new Promise((resolve, reject) => {
-      db.query(sql, [[groups]], (err, res) => {
+      User.query(sql, [[groups]], (err, res) => {
         if (err) {
           return reject(err)
         }
@@ -119,7 +120,7 @@ class User {
     const sql = selectUsersSql(whereClause, limit, offset)
 
     return new Promise((resolve, reject) => {
-      db.query(sql, values, (err, res) => {
+      User.query(sql, values, (err, res) => {
         if (err) {
           reject(err)
         } else {
@@ -133,7 +134,7 @@ class User {
     const sql = "SELECT EXISTS(SELECT 1 FROM `users` WHERE `username` = ?) AS `exists`;"
 
     return new Promise((resolve, reject) => {
-      db.query(sql, username, (err, res) => {
+      User.query(sql, username, (err, res) => {
         if (err) {
           reject(err)
         } else {
@@ -147,7 +148,7 @@ class User {
     const sql = "SELECT NOT EXISTS(SELECT 1 FROM `users` WHERE `username` = ?) AS `notExists`;"
 
     return new Promise((resolve, reject) => {
-      db.query(sql, username, (err, res) => {
+      User.query(sql, username, (err, res) => {
         if (err) {
           reject(err)
         } else {
@@ -161,7 +162,7 @@ class User {
     const sql = "SELECT EXISTS(SELECT 1 FROM `users` WHERE `email` = ?) AS `exists`;"
 
     return new Promise((resolve, reject) => {
-      db.query(sql, email, (err, res) => {
+      User.query(sql, email, (err, res) => {
         if (err) {
           reject(err)
         } else {
@@ -175,7 +176,7 @@ class User {
     const sql = "SELECT NOT EXISTS(SELECT 1 FROM `users` WHERE `email` = ?) AS `notExists`;"
 
     return new Promise((resolve, reject) => {
-      db.query(sql, email, (err, res) => {
+      User.query(sql, email, (err, res) => {
         if (err) {
           reject(err)
         } else {
@@ -189,7 +190,7 @@ class User {
     const sql = "SELECT `password` FROM `users` WHERE `username` = ?;"
 
     return new Promise((resolve, reject) => {
-      db.query(sql, username, (err, res) => {
+      User.query(sql, username, (err, res) => {
         if (err) {
           reject(err)
         } else if (res.length === 0) {
@@ -215,7 +216,7 @@ class User {
     values.push(username)
 
     return new Promise((resolve, reject) => {
-      db.query(sql, values, (err, res) => {
+      User.query(sql, values, (err, res) => {
         if (err) {
           reject(err)
         } else if (res.affectedRows === 0) {
@@ -228,6 +229,7 @@ class User {
   }
 
   constructor({ username, email, active, groups }) {
+    super()
     this.username = username
     this.email = email
     this.active = Boolean(active)
@@ -293,5 +295,3 @@ function selectUsersSql(whereClause, limit, offset) {
   }
   return sql.join(" ") + ";"
 }
-
-export default User

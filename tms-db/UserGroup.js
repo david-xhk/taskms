@@ -1,6 +1,6 @@
-import db from "../database.js"
+import Base from "./Base.js"
 
-class UserGroup {
+export default class UserGroup extends Base {
   static async insertOne(username, group) {
     return await UserGroup.insertMany([[username, group]])
   }
@@ -9,7 +9,7 @@ class UserGroup {
     const sql = "INSERT INTO `user_groups` (`username`, `group`) VALUES ?;"
 
     return new Promise((resolve, reject) => {
-      db.query(sql, [userGroups], (err, res) => {
+      UserGroup.query(sql, [userGroups], (err, res) => {
         if (err) {
           reject(err)
         } else if (res.affectedRows === 0) {
@@ -29,7 +29,7 @@ class UserGroup {
     const sql = "SELECT `username`, `group` FROM `user_groups` WHERE `username` IN ?;"
 
     return new Promise((resolve, reject) => {
-      db.query(sql, [[usernames]], (err, res) => {
+      UserGroup.query(sql, [[usernames]], (err, res) => {
         if (err) {
           return reject(err)
         }
@@ -46,7 +46,7 @@ class UserGroup {
     const sql = "SELECT `username`, `group` FROM `user_groups` WHERE `group` IN ?;"
 
     return new Promise((resolve, reject) => {
-      db.query(sql, [[groups]], (err, res) => {
+      UserGroup.query(sql, [[groups]], (err, res) => {
         if (err) {
           return reject(err)
         }
@@ -59,7 +59,7 @@ class UserGroup {
     const sql = "SELECT EXISTS (SELECT 1 FROM `user_groups` WHERE (`username`, `group`) = ?) AS `exists`;"
 
     return new Promise((resolve, reject) => {
-      db.query(sql, [[[username, group]]], (err, res) => {
+      UserGroup.query(sql, [[[username, group]]], (err, res) => {
         if (err) {
           return reject(err)
         }
@@ -72,7 +72,7 @@ class UserGroup {
     const sql = "SELECT EXISTS (SELECT 1 FROM `user_groups` WHERE (`username`, `group`) IN ?) AS `exists`;"
 
     return new Promise((resolve, reject) => {
-      db.query(sql, [[userGroups]], (err, res) => {
+      UserGroup.query(sql, [[userGroups]], (err, res) => {
         if (err) {
           return reject(err)
         }
@@ -85,7 +85,7 @@ class UserGroup {
     const sql = "SELECT NOT EXISTS (SELECT 1 FROM `user_groups` WHERE (`username`, `group`) = ?) AS `notExists`;"
 
     return new Promise((resolve, reject) => {
-      db.query(sql, [[[username, group]]], (err, res) => {
+      UserGroup.query(sql, [[[username, group]]], (err, res) => {
         if (err) {
           return reject(err)
         }
@@ -98,7 +98,7 @@ class UserGroup {
     const sql = "SELECT NOT EXISTS (SELECT 1 FROM `user_groups` WHERE (`username`, `group`) IN ?) AS `notExists`;"
 
     return new Promise((resolve, reject) => {
-      db.query(sql, [[userGroups]], (err, res) => {
+      UserGroup.query(sql, [[userGroups]], (err, res) => {
         if (err) {
           return reject(err)
         }
@@ -115,7 +115,7 @@ class UserGroup {
     const sql = "DELETE FROM `user_groups` WHERE (`username`, `group`) IN ?;"
 
     return new Promise((resolve, reject) => {
-      db.query(sql, [[userGroups]], (err, res) => {
+      UserGroup.query(sql, [[userGroups]], (err, res) => {
         if (err) {
           reject(err)
         } else if (res.affectedRows === 0) {
@@ -127,5 +127,3 @@ class UserGroup {
     })
   }
 }
-
-export default UserGroup

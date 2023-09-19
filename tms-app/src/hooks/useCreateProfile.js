@@ -1,9 +1,8 @@
 import { useCallback, useEffect } from "react"
 import { useImmerReducer } from "use-immer"
 
-import { validateGroup, validateGroups } from "tms-all/validators/groupValidator"
-import { validateEmail, validateEmailDelayed, validateEmailImmediately, validatePassword, validatePasswordDelayed, validatePasswordImmediately, validateUsername, validateUsernameDelayed, validateUsernameImmediately } from "tms-all/validators/userValidator.js"
-import * as validators from "tms-all/validators/validators.js"
+import { validateEmail, validateEmailDelayed, validateEmailImmediately, validateGroup, validateGroups, validatePassword, validatePasswordDelayed, validatePasswordImmediately, validateUsername, validateUsernameDelayed, validateUsernameImmediately } from "@han-keong/tms-validators"
+import * as validators from "@han-keong/validators"
 
 import API from "../api"
 import useAuth from "./useAuth"

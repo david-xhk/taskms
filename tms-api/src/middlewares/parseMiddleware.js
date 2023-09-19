@@ -1,6 +1,6 @@
 import bcrypt from "bcryptjs"
 
-import { parseArray, parseBoolean, parseInteger, parseOrCreateArray } from "tms-all/helpers/parseHelper.js"
+import { parseArray, parseBoolean, parseInteger, parseOrCreateArray } from "@han-keong/helpers"
 
 export default function parse(source, ...values) {
   return async function parsed(req, res, next) {

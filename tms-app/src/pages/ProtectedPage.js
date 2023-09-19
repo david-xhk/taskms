@@ -1,6 +1,7 @@
 import React from "react"
 
-import { hasIntersection } from "tms-all/helpers/arrayHelper"
+import { hasIntersection } from "@han-keong/helpers"
+
 import LoadingDots from "../components/LoadingDots"
 import NotAuthorized from "../components/NotAuthorized"
 import NotLoggedIn from "../components/NotLoggedIn"

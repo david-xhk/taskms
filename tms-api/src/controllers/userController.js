@@ -1,6 +1,5 @@
-import { getDifference } from "tms-all/helpers/arrayHelper.js"
-
-import UserGroup from "../models/UserGroup.js"
+import { getDifference } from "@han-keong/helpers"
+import { UserGroup } from "@han-keong/tms-db"
 
 export function getCurrentUser(req, res) {
   res.json({ success: true, data: req.user })
