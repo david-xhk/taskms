@@ -2,16 +2,16 @@ import React from "react"
 
 import LoadingDots from "../components/LoadingDots"
 import useAuth from "../hooks/useAuth"
-// import NotLoggedInPage from "./NotLoggedInPage"
+import NotLoggedInPage from "./NotLoggedInPage"
 import ProtectedPage from "./ProtectedPage"
-import RegisterPage from "./RegisterPage"
+// import RegisterPage from "./RegisterPage"
 
 export default function HomePage() {
   const auth = useAuth()
 
   if (!auth.loggedIn) {
-    return <RegisterPage />
-    // return <NotLoggedInPage />
+    // return <RegisterPage />
+    return <NotLoggedInPage />
   }
 
   return (

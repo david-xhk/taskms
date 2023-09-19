@@ -1,6 +1,5 @@
 import cookieParser from "cookie-parser"
 import cors from "cors"
-import dotenv from "dotenv"
 import express, { json as bodyParser, urlencoded as urlEncodedParser } from "express"
 import rateLimit from "express-rate-limit"
 import helmet from "helmet"
@@ -21,7 +20,11 @@ process.on("uncaughtException", err => {
   process.exit(1)
 })
 
-dotenv.config({ path: "../.env" })
+if (process.env.NODE_ENV === "development") {
+  import("dotenv").then(dotenv => {
+    dotenv.config({ path: "../.env" })
+  })
+}
 
 db.connect({
   host: process.env.DB_HOST,

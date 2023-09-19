@@ -1,6 +1,6 @@
 {
   "name": "tms",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Task Management System is an application which allows teams to effectively manage tasks.",
   "main": "index.js",
   "scripts": {

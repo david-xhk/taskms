@@ -4,13 +4,7 @@
   "type": "module",
   "description": "Common utils for the Task Management System",
   "main": "index.js",
-  "scripts": {
-    "test": "echo \"No tests here yet.\""
-  },
   "author": "Xie Han Keong",
-  "license": "ISC",
-  "dependencies": {
-    "nodemailer": "^6.9.5"
-  }
+  "license": "ISC"
 }
 

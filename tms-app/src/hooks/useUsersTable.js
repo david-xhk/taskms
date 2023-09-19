@@ -40,7 +40,7 @@ export default function useUsersTable() {
     setFetchOrdinal(x => x + 1)
     if (showMessage) {
       on("getUsersEffect success", () => {
-        flashMessage("🔄 Refreshed.", "info")
+        flashMessage("🔄 Users have been refreshed.", "info")
       })
     }
   }, [])

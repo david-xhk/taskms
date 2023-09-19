@@ -58,9 +58,11 @@ export async function validateCreateUserBody(req, res, next) {
   if (!hasError(result, "username")) {
     await checkUsernameNotExists(username, result).catch(next)
   }
-  validateEmail(email, result)
-  if (!hasError(result, "email")) {
-    await checkEmailNotExists(email, result).catch(next)
+  if (email !== undefined) {
+    validateEmail(email, result)
+    if (!hasError(result, "email")) {
+      await checkEmailNotExists(email, result).catch(next)
+    }
   }
   validatePassword(password, result)
   validateActive(active)

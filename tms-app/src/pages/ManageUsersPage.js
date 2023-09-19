@@ -52,7 +52,7 @@ export default function ManageUsersPage() {
                     {user.username}
                   </Link>
                 </th>
-                <td>{truncate(user.email, 30)}</td>
+                <td>{user.email ? truncate(user.email, 30) : <span className="text-muted">null</span>}</td>
                 <td>{user.active ? "🟢" : "⛔️"}</td>
                 <td>
                   {user.groups.map((group, index) => (

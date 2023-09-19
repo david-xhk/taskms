@@ -1,6 +1,6 @@
 import { validateGroup, validateGroups, validateGroupsString } from "tms-all/validators/groupValidator.js"
 import { validateActive, validateEmail, validatePassword, validateUsername } from "tms-all/validators/userValidator.js"
-import { getError, hasError, hasErrors } from "tms-all/validators/validators.js"
+import { hasError, hasErrors } from "tms-all/validators/validators.js"
 
 import User from "../models/User.js"
 import UserGroup from "../models/UserGroup.js"
@@ -63,7 +63,7 @@ export async function validateUpdateUserBody(req, res, next) {
     return next(new ErrorMessage("Nothing to update.", 400))
   }
   const result = {}
-  if (email !== undefined && email !== req.params.user.email) {
+  if (email !== undefined && email !== null && email !== req.params.user.email) {
     validateEmail(email, result)
     if (!hasError(result, "email")) {
       await checkEmailNotExists(email, result).catch(next)

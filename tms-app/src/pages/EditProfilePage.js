@@ -63,7 +63,7 @@ export default function EditProfilePage() {
               <label htmlFor="email-input" className="text-muted mb-2">
                 <small>Email</small>
               </label>
-              <input onChange={form.onEmailChanged} onBlur={e => !e.target.value && form.onEmailChanged(form.original.email)} value={form.email} autoFocus name="email" id="email-input" className="form-control form-control-lg" type="text" placeholder="Enter New Email" autoComplete="off" />
+              <input onChange={form.onEmailChanged} value={form.email} autoFocus name="email" id="email-input" className="form-control form-control-lg" type="search" placeholder="Enter New Email" autoComplete="off" />
               <ValidationError visible={form.hasEmailError}>{form.emailError}</ValidationError>
             </div>
             <div className="form-group mb-4">

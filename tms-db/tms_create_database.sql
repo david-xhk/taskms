@@ -9,7 +9,7 @@ DROP TABLE IF EXISTS `users`;
 CREATE TABLE `users` (
   `username` VARCHAR(32) NOT NULL,
   UNIQUE INDEX `username_idx` (`username` ASC) VISIBLE,  
-  `email` VARCHAR(255) NULL,
+  `email` VARCHAR(255),
   UNIQUE INDEX `email_idx` (`email` ASC) VISIBLE,
   `password` BINARY(60) NOT NULL,
   `active` BOOLEAN NOT NULL DEFAULT TRUE,
@@ -21,11 +21,11 @@ CREATE TABLE `users` (
 INSERT INTO `users` (`username`, `email`, `password`, `active`) VALUES
 	("admin", "admin@example.com", "$2a$10$Iw9uaPO1FHnDIcvnzCyST.yxTi2FhlVwdnZJiC.9ptqkasceNb3UG", true),
 	("admin2", "admin2@example.com", "$2a$10$Iw9uaPO1FHnDIcvnzCyST.yxTi2FhlVwdnZJiC.9ptqkasceNb3UG", true),
-    ("inactive", "inactive@example.com", "$2a$10$Iw9uaPO1FHnDIcvnzCyST.yxTi2FhlVwdnZJiC.9ptqkasceNb3UG", false),
-    ("user", "user@example.com", "$2a$10$Iw9uaPO1FHnDIcvnzCyST.yxTi2FhlVwdnZJiC.9ptqkasceNb3UG", true),
-    ("user1", "user1@example.com", "$2a$10$Iw9uaPO1FHnDIcvnzCyST.yxTi2FhlVwdnZJiC.9ptqkasceNb3UG", true),
-    ("user2", "user2@example.com", "$2a$10$Iw9uaPO1FHnDIcvnzCyST.yxTi2FhlVwdnZJiC.9ptqkasceNb3UG", true),
-    ("user3", "user3@example.com", "$2a$10$Iw9uaPO1FHnDIcvnzCyST.yxTi2FhlVwdnZJiC.9ptqkasceNb3UG", true);
+  ("inactive", "inactive@example.com", "$2a$10$Iw9uaPO1FHnDIcvnzCyST.yxTi2FhlVwdnZJiC.9ptqkasceNb3UG", false),
+  ("user", "user@example.com", "$2a$10$Iw9uaPO1FHnDIcvnzCyST.yxTi2FhlVwdnZJiC.9ptqkasceNb3UG", true),
+  ("user1", "user1@example.com", "$2a$10$Iw9uaPO1FHnDIcvnzCyST.yxTi2FhlVwdnZJiC.9ptqkasceNb3UG", true),
+  ("user2", "user2@example.com", "$2a$10$Iw9uaPO1FHnDIcvnzCyST.yxTi2FhlVwdnZJiC.9ptqkasceNb3UG", true),
+  ("user3", "user3@example.com", "$2a$10$Iw9uaPO1FHnDIcvnzCyST.yxTi2FhlVwdnZJiC.9ptqkasceNb3UG", true);
 
 CREATE TABLE `groups` (
   `group` VARCHAR(50) NOT NULL,

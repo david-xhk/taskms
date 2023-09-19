@@ -1,6 +1,5 @@
 import jwt from "jsonwebtoken"
 import User from "../models/User.js"
-import UserGroup from "../models/UserGroup.js"
 
 function getJwtToken(payload) {
   return jwt.sign(payload, process.env.JWT_SECRET, { expiresIn: process.env.JWT_EXPIRES_TIME })
@@ -17,7 +16,6 @@ function setJwtCookie(res, token) {
 export async function registerUser(req, res, next) {
   const { username, email, password } = req.body
   await User.insertOne(username, email, password, true).catch(next)
-  await UserGroup.insertOne(username, "user")
   const user = await User.findByUsername(username).catch(next)
   setJwtCookie(res, getJwtToken({ username }))
   res.json({ success: true, data: user })

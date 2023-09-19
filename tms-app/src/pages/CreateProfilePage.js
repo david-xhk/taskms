@@ -38,14 +38,14 @@ export default function EditProfilePage() {
           <label htmlFor="username-input" className="text-muted mb-2">
             <small>Username</small>
           </label>
-          <input onChange={form.onUsernameChanged} value={form.username} name="username" id="username-input" autoFocus className="form-control form-control-lg" type="text" placeholder="Enter Username" autoComplete="off" />
+          <input onChange={form.onUsernameChanged} value={form.username} name="username" id="username-input" autoFocus className="form-control form-control-lg" type="search" placeholder="Enter Username" autoComplete="off" />
           <ValidationError visible={form.hasUsernameError}>{form.usernameError}</ValidationError>
         </div>
         <div className="form-group mb-4">
           <label htmlFor="email-input" className="text-muted mb-2">
             <small>Email</small>
           </label>
-          <input onChange={form.onEmailChanged} value={form.email} name="email" id="email-input" className="form-control form-control-lg" type="text" placeholder="Enter Email" autoComplete="off" />
+          <input onChange={form.onEmailChanged} value={form.email} name="email" id="email-input" className="form-control form-control-lg" type="search" placeholder="Enter Email" autoComplete="off" />
           <ValidationError visible={form.hasEmailError}>{form.emailError}</ValidationError>
         </div>
         <div className="form-group mb-4">

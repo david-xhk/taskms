@@ -17,7 +17,7 @@ const initialState = {
   active: false,
   groups: [],
   dirty: {},
-  changes: {},
+  fields: {},
   isValidating: false,
   isSaving: false,
   saveOrdinal: 0
@@ -33,7 +33,7 @@ export default function useCreateProfile() {
       case "usernameImmediately":
         validators.deleteError(draft, "username")
         draft.username = action.value
-        delete draft.changes.username
+        delete draft.fields.username
         if (draft.username) {
           draft.dirty.username = true
           draft.isValidating = validateUsernameImmediately(draft.username, draft)
@@ -46,7 +46,7 @@ export default function useCreateProfile() {
       case "usernameAfterDelay":
         draft.isValidating = false
         if (validateUsernameDelayed(draft.username, draft)) {
-          draft.changes.username = draft.username
+          draft.fields.username = draft.username
           delete draft.dirty.username
         }
         break
@@ -54,7 +54,7 @@ export default function useCreateProfile() {
       case "emailImmediately":
         validators.deleteError(draft, "email")
         draft.email = action.value
-        delete draft.changes.email
+        delete draft.fields.email
         if (draft.email) {
           draft.dirty.email = true
           draft.isValidating = validateEmailImmediately(draft.email, draft)
@@ -67,7 +67,7 @@ export default function useCreateProfile() {
       case "emailAfterDelay":
         draft.isValidating = false
         if (validateEmailDelayed(draft.email, draft)) {
-          draft.changes.email = draft.email
+          draft.fields.email = draft.email
           delete draft.dirty.email
         }
         break
@@ -75,7 +75,7 @@ export default function useCreateProfile() {
       case "passwordImmediately":
         validators.deleteError(draft, "password")
         draft.password = action.value
-        delete draft.changes.password
+        delete draft.fields.password
         if (draft.password) {
           draft.dirty.password = true
           draft.isValidating = validatePasswordImmediately(draft.password, draft)
@@ -88,13 +88,13 @@ export default function useCreateProfile() {
       case "passwordAfterDelay":
         draft.isValidating = false
         if (validatePasswordDelayed(draft.password, draft)) {
-          draft.changes.password = draft.password
+          draft.fields.password = draft.password
           delete draft.dirty.password
         }
         break
 
       case "activeChanged":
-        draft.active = draft.changes.active = action.value
+        draft.active = draft.fields.active = action.value
         break
 
       case "groupChanged":
@@ -107,9 +107,9 @@ export default function useCreateProfile() {
       case "groupsChanged":
         validators.deleteError(draft, "groups")
         draft.groups = [...action.value]
-        delete draft.changes.groups
-        if (validateGroups(draft.groups, draft)) {
-          draft.changes.groups = [...draft.groups]
+        delete draft.fields.groups
+        if (draft.groups.length === 0 || validateGroups(draft.groups, draft)) {
+          draft.fields.groups = [...draft.groups]
         }
         break
 
@@ -122,11 +122,13 @@ export default function useCreateProfile() {
         break
 
       case "saveData":
-        validateUsername(draft.changes.username, draft)
-        validateEmail(draft.changes.email, draft)
-        validatePassword(draft.changes.password, draft)
-        if (draft.changes.groups) {
-          validateGroups(draft.changes.groups, draft)
+        validateUsername(draft.fields.username, draft)
+        if (draft.fields.email) {
+          validateEmail(draft.fields.email, draft)
+        }
+        validatePassword(draft.fields.password, draft)
+        if (draft.fields.groups) {
+          validateGroups(draft.fields.groups, draft)
         }
         if (!validators.hasError(draft)) {
           draft.saveOrdinal++
@@ -145,7 +147,7 @@ export default function useCreateProfile() {
         draft.active = false
         draft.groups = []
         draft.dirty = {}
-        draft.changes = {}
+        draft.fields = {}
         draft.isValidating = false
         draft.isSaving = false
         draft.hideStatus = false
@@ -162,9 +164,9 @@ export default function useCreateProfile() {
     if (dirty.length > 0) {
       state.dirty = dirty.join(", ")
     }
-    const changes = Object.keys(draft.changes)
-    if (changes.length > 0) {
-      state.changes = changes.join(", ")
+    const fields = Object.keys(draft.fields)
+    if (fields.length > 0) {
+      state.fields = fields.join(", ")
     }
     if (validators.hasError(draft)) {
       state.errors = Object.keys(validators.getErrors(draft)).join(", ")
@@ -176,7 +178,7 @@ export default function useCreateProfile() {
   }
 
   const [state, dispatch] = useImmerReducer(reducer, initialState)
-  const { username, email, password, active, groups, dirty, changes, isValidating, isSaving, saveOrdinal } = state
+  const { username, email, password, active, groups, dirty, fields, isValidating, isSaving, saveOrdinal } = state
 
   const hasErrors = validators.hasErrors(state)
   const errors = validators.getErrors(state)
@@ -190,10 +192,10 @@ export default function useCreateProfile() {
   const groupsError = validators.getError(state, "groups")
 
   const isDirty = Object.keys(dirty).length > 0
-  const hasRequired = changes.username && changes.email && changes.password
-  const allowSubmit = !isSaving && !hasErrors && !isDirty && hasRequired
+  const hasRequiredFields = fields.username && fields.password
+  const allowSubmit = !isSaving && !hasErrors && !isDirty && hasRequiredFields
   const showStatus = isSaving || isValidating
-  const status = isSaving ? "Saving Changes" : "Validating Changes"
+  const status = isSaving ? "Creating Profile" : "Validating Fields"
 
   // emit("render", { allowSubmit, showStatus, ...(isSaving && { isSaving }), ...(hasErrors && { hasErrors }) })
 
@@ -239,7 +241,7 @@ export default function useCreateProfile() {
     }
     dispatch({ type: "saveStarted" })
     return onCancel(
-      API.postUser({ data: changes }, async res => {
+      API.postUser({ data: fields }, async res => {
         try {
           await auth.checkAuth()
         } catch {
@@ -302,7 +304,7 @@ export default function useCreateProfile() {
     cancelAll()
     if (showMessage) {
       on("resetForm", () => {
-        flashMessage("↩️ Reset done.", "info")
+        flashMessage("↩️ Form has been reset.", "info")
       })
     }
   }, [])
@@ -313,6 +315,8 @@ export default function useCreateProfile() {
     password,
     active,
     groups,
+    dirty,
+    fields,
     isValidating,
     isSaving,
     hasErrors,
@@ -325,6 +329,8 @@ export default function useCreateProfile() {
     passwordError,
     hasGroupsError,
     groupsError,
+    isDirty,
+    hasRequiredFields,
     allowSubmit,
     showStatus,
     status,

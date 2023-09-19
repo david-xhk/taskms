@@ -11,7 +11,7 @@ import Page from "./Page"
 
 export default function RegisterPage() {
   const auth = useAuth()
-  const { emit } = useEventEmitter()
+  const { emit } = useEventEmitter("RegisterPage")
 
   function reducer(draft, action) {
     switch (action.type) {

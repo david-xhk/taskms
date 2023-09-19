@@ -47,6 +47,9 @@ export default function useEditProfile(username) {
         } else {
           delete draft.dirty.email
           draft.isValidating = false
+          if (!draft.email && draft.original.email) {
+            draft.changes.email = null
+          }
         }
         break
 
@@ -98,31 +101,13 @@ export default function useEditProfile(username) {
         validators.deleteError(draft, "groups")
         draft.groups = [...action.value]
         delete draft.changes.groups
-        if (!hasNoDifference(draft.groups, draft.original.groups) && validateGroups(draft.groups, draft)) {
+        if (!hasNoDifference(draft.groups, draft.original.groups) && (draft.groups.length === 0 || validateGroups(draft.groups, draft))) {
           draft.changes.groups = [...draft.groups]
         }
         break
 
-      case "updateData":
-        // emit("updateData", { email: action.data.email, active: action.data.active, groups: action.data.groups?.join(", ") })
-        // emit("updateData before", { email: draft.email, active: draft.active, groups: draft.groups.join(", "), ...(Object.keys(draft.dirty).length > 0 && { dirty: Object.keys(draft.dirty).join(", ") }), ...(Object.keys(draft.changes).length > 0 && { changes: Object.keys(draft.changes).join(", ") }) })
-        if ((draft.original.email === undefined && !draft.email) || (draft.original.email && draft.email === draft.original.email)) {
-          draft.email = action.data.email
-        }
-        if ((draft.original.active === undefined && !draft.active) || (draft.original.active && draft.active === draft.original.active)) {
-          draft.active = action.data.active
-        } else if (draft.active !== action.data.active) {
-          draft.changes.active = draft.active
-        }
-        if ((draft.original.groups === undefined && draft.groups.length === 0) || (draft.original.groups && hasNoDifference(draft.groups, draft.original.groups))) {
-          draft.groups = [...action.data.groups]
-        } else if (!hasNoDifference(draft.groups, action.data.groups)) {
-          draft.changes.groups = [...draft.groups]
-        }
-        draft.original.email = action.data.email
-        draft.original.active = action.data.active
-        draft.original.groups = [...action.data.groups]
-        // emit("updateData after", { email: draft.email, active: draft.active, groups: draft.groups.join(", "), ...(Object.keys(draft.dirty).length > 0 && { dirty: Object.keys(draft.dirty).join(", ") }), ...(Object.keys(draft.changes).length > 0 && { changes: Object.keys(draft.changes).join(", ") }) })
+      case "fetchData":
+        draft.fetchOrdinal++
         break
 
       case "fetchStarted":
@@ -138,29 +123,6 @@ export default function useEditProfile(username) {
         draft.isFetching = false
         break
 
-      case "saveStarted":
-        draft.isSaving = true
-        if (action.hideStatus) {
-          draft.hideStatus = true
-        }
-        break
-
-      case "saveFinished":
-        draft.isSaving = false
-        break
-
-      case "notFound":
-        draft.notFound = true
-        break
-
-      case "notAuthorized":
-        draft.notAuthorized = true
-        break
-
-      case "fetchData":
-        draft.fetchOrdinal++
-        break
-
       case "saveData":
         if (draft.changes.email) {
           validateEmail(draft.changes.email, draft)
@@ -174,6 +136,48 @@ export default function useEditProfile(username) {
         if (!validators.hasError(draft)) {
           draft.saveOrdinal++
         }
+        break
+
+      case "saveStarted":
+        draft.isSaving = true
+        if (action.hideStatus) {
+          draft.hideStatus = true
+        }
+        break
+
+      case "saveFinished":
+        draft.isSaving = false
+        break
+
+      case "fetchSuccess":
+      case "saveSuccess":
+        // emit("updateData", { email: action.data.email, active: action.data.active, groups: action.data.groups?.join(", ") })
+        // emit("updateData before", { email: draft.email, active: draft.active, groups: draft.groups.join(", "), ...(Object.keys(draft.dirty).length > 0 && { dirty: Object.keys(draft.dirty).join(", ") }), ...(Object.keys(draft.changes).length > 0 && { changes: Object.keys(draft.changes).join(", ") }) })
+        if ((draft.original.email === undefined && !draft.email) || (draft.original.email && draft.email === draft.original.email)) {
+          draft.email = action.data.email ?? ""
+        }
+        if ((draft.original.active === undefined && !draft.active) || (draft.original.active && draft.active === draft.original.active)) {
+          draft.active = action.data.active
+        } else if (draft.active !== action.data.active) {
+          draft.changes.active = draft.active
+        }
+        if ((draft.original.groups === undefined && draft.groups.length === 0) || (draft.original.groups && hasNoDifference(draft.groups, draft.original.groups))) {
+          draft.groups = [...action.data.groups]
+        } else if (!hasNoDifference(draft.groups, action.data.groups)) {
+          draft.changes.groups = [...draft.groups]
+        }
+        draft.original.email = action.data.email ?? ""
+        draft.original.active = action.data.active
+        draft.original.groups = [...action.data.groups]
+        // emit("updateData after", { email: draft.email, active: draft.active, groups: draft.groups.join(", "), ...(Object.keys(draft.dirty).length > 0 && { dirty: Object.keys(draft.dirty).join(", ") }), ...(Object.keys(draft.changes).length > 0 && { changes: Object.keys(draft.changes).join(", ") }) })
+        break
+
+      case "notFound":
+        draft.notFound = true
+        break
+
+      case "notAuthorized":
+        draft.notAuthorized = true
         break
 
       case "formErrors":
@@ -291,11 +295,19 @@ export default function useEditProfile(username) {
     if (!username) {
       return
     }
+    dispatch({ type: "fetchData" })
+    on("fetchSuccess", () => dispatch({ type: "resetForm" }))
+  }, [username])
+
+  useEffect(() => {
+    if (!fetchOrdinal) {
+      return
+    }
     dispatch({ type: "fetchStarted" })
     return onCancel(
       API.getUser({ params: username }, res => {
         if (res.data?.success) {
-          dispatch({ type: "updateData", data: res.data.data })
+          dispatch({ type: "fetchSuccess", data: res.data.data })
         } else {
           if (res.status === 403) {
             dispatch({ type: "notAuthorized" })
@@ -307,10 +319,10 @@ export default function useEditProfile(username) {
         dispatch({ type: "fetchFinished" })
       })
     )
-  }, [username, fetchOrdinal])
+  }, [fetchOrdinal])
 
   useEffect(() => {
-    if (!username || !saveOrdinal) {
+    if (!saveOrdinal) {
       return
     }
     dispatch({ type: "saveStarted" })
@@ -323,12 +335,8 @@ export default function useEditProfile(username) {
           return
         }
         if (res.data?.success) {
-          dispatch({ type: "updateData", data: res.data.data })
-          flashMessage("📝 Profile updated!", "success")
-          dispatch({ type: "resetForm" })
-          return
-        }
-        if (res.data?.errors) {
+          dispatch({ type: "saveSuccess", data: res.data.data })
+        } else if (res.data?.errors) {
           dispatch({ type: "formErrors", errors: res.data.errors })
         } else {
           flashMessage(res.data?.message ?? "Unknown error occured. Please try again later.", "danger")
@@ -336,7 +344,7 @@ export default function useEditProfile(username) {
         dispatch({ type: "saveFinished" })
       })
     )
-  }, [username, saveOrdinal])
+  }, [saveOrdinal])
 
   const dispatchFieldChanged = type =>
     function onFieldChanged(value) {
@@ -367,6 +375,10 @@ export default function useEditProfile(username) {
       e.preventDefault()
       if (!hasErrors) {
         dispatch({ type: "saveData", hideStatus: true })
+        on("saveSuccess", () => {
+          flashMessage("📝 Profile updated!", "success")
+          dispatch({ type: "resetForm" })
+        })
       }
     },
     [hasErrors]
@@ -375,8 +387,8 @@ export default function useEditProfile(username) {
   const refresh = useCallback((showMessage = false) => {
     dispatch({ type: "fetchData" })
     if (showMessage) {
-      on("fetchFinished", () => {
-        flashMessage("🔄 Refreshed.", "info")
+      on("fetchSuccess", () => {
+        flashMessage("🔄 Profile has been refreshed.", "info")
       })
     }
   }, [])
@@ -386,7 +398,7 @@ export default function useEditProfile(username) {
     cancelAll()
     if (showMessage) {
       on("resetForm", () => {
-        flashMessage("↩️ Reset done.", "info")
+        flashMessage("↩️ Form has been reset.", "info")
       })
     }
   }, [])
