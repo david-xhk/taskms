@@ -1,0 +1,16 @@
+{
+  "name": "@han-keong/tms-db",
+  "version": "1.0.3",
+  "description": "Database driver for the Task Management System",
+  "license": "ISC",
+  "author": "Xie Han Keong",
+  "type": "module",
+  "main": "./database.js",
+  "scripts": {
+    "test": "echo \"No tests here yet\""
+  },
+  "dependencies": {
+    "@han-keong/tms-helpers": "^1.0.3",
+    "mysql2": "^3.6.1"
+  }
+}

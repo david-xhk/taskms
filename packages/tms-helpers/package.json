@@ -1,0 +1,18 @@
+{
+  "name": "@han-keong/tms-helpers",
+  "version": "1.0.3",
+  "description": "Helper functions for the Task Management System",
+  "license": "ISC",
+  "author": "Xie Han Keong",
+  "type": "module",
+  "exports": {
+    ".": "./index.js",
+    "./*": "./helpers/*.js"
+  },
+  "scripts": {
+    "test": "echo \"No tests here yet\""
+  },
+  "publishConfig": {
+    "access": "public"
+  }
+}

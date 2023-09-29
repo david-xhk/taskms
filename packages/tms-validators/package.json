@@ -1,0 +1,21 @@
+{
+  "name": "@han-keong/tms-validators",
+  "version": "1.0.3",
+  "description": "Validators for the Task Management System",
+  "license": "ISC",
+  "author": "Xie Han Keong",
+  "type": "module",
+  "exports": {
+    ".": "./index.js",
+    "./*": "./validators/*.js"
+  },
+  "scripts": {
+    "test": "echo \"No tests here yet\""
+  },
+  "dependencies": {
+    "@han-keong/tms-helpers": "^1.0.3"
+  },
+  "publishConfig": {
+    "access": "public"
+  }
+}

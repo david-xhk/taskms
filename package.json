@@ -1,29 +1,40 @@
 {
   "name": "@han-keong/tms",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "Task Management System is an application which allows teams to effectively manage tasks.",
+  "license": "ISC",
+  "author": "Xie Han Keong",
+  "type": "module",
+  "workspaces": [
+    "packages/*"
+  ],
   "scripts": {
-    "api:ci": "npm ci -w tms-api",
-    "api:start": "npm run start -w tms-api",
-    "api:dev": "npm run dev -w tms-api",
-    "api:prod": "npm run prod -w tms-api",
-    "app:ci": "npm ci -w tms-app",
-    "app:build": "npm run build -w tms-app",
-    "app:dev": "npm run dev -w tms-app",
-    "app:prod": "npm run prod -w tms-app",
+    "api:ci": "npm ci -w packages/tms-api",
+    "api:start": "npm run start -w packages/tms-api",
+    "api:dev": "npm run dev -w packages/tms-api",
+    "api:prod": "npm run prod -w packages/tms-api",
+    "app:ci": "npm ci -w packages/tms-app",
+    "app:build": "npm run build -w packages/tms-app",
+    "app:dev": "npm run dev -w packages/tms-app",
+    "app:prod": "npm run prod -w packages/tms-app",
     "dev": "npm-run-all -p api:dev app:dev",
     "prod": "npm-run-all -p api:prod app:prod"
   },
-  "author": "Xie Han Keong",
-  "license": "ISC",
-  "workspaces": [
-    "tms-app",
-    "tms-api",
-    "tms-db",
-    "tms-validators"
-  ],
   "devDependencies": {
-    "npm-run-all": "^4.1.5"
+    "@babel/core": "^7.23.0",
+    "@babel/node": "^7.22.19",
+    "@babel/preset-env": "^7.22.20",
+    "@babel/preset-react": "^7.22.15",
+    "@eslint/js": "^8.50.0",
+    "@types/webpack-env": "^1.18.2",
+    "cross-env": "^7.0.3",
+    "eslint": "^8.50.0",
+    "eslint-plugin-jsdoc": "^46.8.2",
+    "eslint-plugin-react": "^7.33.2",
+    "express": "^4.18.2",
+    "globals": "^13.22.0",
+    "nodemon": "^3.0.1",
+    "npm-run-all": "^4.1.5",
+    "webpack-dev-server": "^4.15.1"
   }
 }
-
