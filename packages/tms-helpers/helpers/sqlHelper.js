@@ -23,11 +23,12 @@ export function insertSql(table, columns, values) {
  * @param {string} [options.where]
  * @param {string} [options.groupBy]
  * @param {string} [options.having]
+ * @param {string} [options.orderBy]
  * @param {string | number} [options.limit]
  * @param {string | number} [options.offset]
  */
 export function selectSql(table, options) {
-  let { columns, join, on, where, groupBy, having, limit, offset } = options ?? {}
+  let { columns, join, on, where, groupBy, having, orderBy, limit, offset } = options ?? {}
   if (columns !== undefined) {
     columns = parseOrCreateArray(columns).join(", ")
   }
@@ -43,6 +44,9 @@ export function selectSql(table, options) {
     if (having !== undefined) {
       sql.push("HAVING", having)
     }
+  }
+  if (orderBy !== undefined) {
+    sql.push("ORDER BY", orderBy)
   }
   if (limit !== undefined) {
     sql.push("LIMIT", limit.toString())

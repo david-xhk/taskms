@@ -1,6 +1,6 @@
 {
   "name": "@han-keong/tms-helpers",
-  "version": "1.0.3",
+  "version": "2.0.0",
   "description": "Helper functions for the Task Management System",
   "license": "ISC",
   "author": "Xie Han Keong",
@@ -11,8 +11,5 @@
   },
   "scripts": {
     "test": "echo \"No tests here yet\""
-  },
-  "publishConfig": {
-    "access": "public"
   }
 }

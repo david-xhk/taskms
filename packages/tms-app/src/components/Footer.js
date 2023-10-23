@@ -4,7 +4,7 @@ import { Link } from "react-router-dom"
 export default function Footer() {
   return (
     <footer className="border-top text-center small text-muted py-3">
-      <p>
+      <p className="mb-2">
         <Link to="/" className="mx-1">
           Home
         </Link>{" "}

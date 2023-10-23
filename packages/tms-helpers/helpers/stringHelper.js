@@ -34,7 +34,7 @@ export function truncate(str, len) {
   if (str.length <= len) {
     return str
   }
-  return str.slice(0, len - 3) + "..."
+  return str.replace(/[\r\n\t\f\v]/g, "").slice(0, len - 3) + "..."
 }
 
 /**

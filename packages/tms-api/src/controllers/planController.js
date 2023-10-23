@@ -10,10 +10,10 @@ export async function updatePlan(req, res, next) {
   if (colour !== undefined && colour !== plan.colour) {
     values.colour = colour
   }
-  if (startDate !== undefined && startDate.toDateString() !== plan.startDate.toDateString()) {
+  if (startDate !== undefined && (startDate === null || plan.startDate === null || startDate.toDateString() !== plan.startDate.toDateString())) {
     values.startDate = startDate
   }
-  if (endDate !== undefined && endDate.toDateString() !== plan.endDate.toDateString()) {
+  if (endDate !== undefined && (endDate === null || plan.endDate === null || endDate.toDateString() !== plan.endDate.toDateString())) {
     values.endDate = endDate
   }
   if (Object.keys(values).length > 0) {

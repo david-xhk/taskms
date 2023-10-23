@@ -6,22 +6,24 @@ export default class TaskNoteModel extends TaskNote {
   /**
    * @param {string} taskId
    * @param {string} content
+   * @param {"update task" | "user note"} noteType
    * @param {string} createdBy
    */
-  static insertOne(taskId, content, createdBy) {
-    return TaskNoteModel.insertMany([{ taskId, content, createdBy }])
+  static insertOne(taskId, content, noteType, createdBy) {
+    return TaskNoteModel.insertMany([{ taskId, content, createdBy, noteType }])
   }
 
   /**
    * @param {object[]} args
    * @param {string} args[].taskId
    * @param {string} args[].content
+   * @param {"update task" | "user note"} args[].noteType
    * @param {string} args[].createdBy
    * @returns {Promise<void>}
    */
   static insertMany(args) {
-    const sql = insertSql("`task_notes`", ["`task_id`", "`content`", "`created_by`"])
-    const values = args.map(({ taskId, content, createdBy }) => [taskId, content, createdBy])
+    const sql = insertSql("`Note`", ["`Task_id`", "`content`", "`note_type`", "`created_by`"])
+    const values = args.map(({ taskId, content, noteType, createdBy }) => [taskId, content, noteType, createdBy])
 
     return new Promise((resolve, reject) => {
       db.query(sql, [values], (err, res) => {
@@ -41,7 +43,7 @@ export default class TaskNoteModel extends TaskNote {
    * @returns {Promise<TaskNoteModel?>}
    */
   static findByNoteId(noteId) {
-    const sql = selectSql("`task_notes`", { where: "`note_id` = ?" })
+    const sql = selectSql("`Note`", { where: "`note_id` = ?" })
 
     return new Promise((resolve, reject) => {
       db.query(sql, noteId, (err, res) => {
@@ -61,7 +63,7 @@ export default class TaskNoteModel extends TaskNote {
    * @returns {Promise<TaskNoteModel[]>}
    */
   static findByTaskId(taskId) {
-    const sql = selectSql("`task_notes`", { where: "`task_id` = ?" })
+    const sql = selectSql("`Note`", { where: "`Task_id` = ?", orderBy: "`created_at` DESC" })
 
     return new Promise((resolve, reject) => {
       db.query(sql, taskId, (err, res) => {
@@ -79,7 +81,7 @@ export default class TaskNoteModel extends TaskNote {
    * @returns {Promise<boolean>}
    */
   static noteIdExists(noteId) {
-    const sql = selectExistsSql("`task_notes`", "`note_id` = ?")
+    const sql = selectExistsSql("`Note`", "`note_id` = ?")
 
     return new Promise((resolve, reject) => {
       db.query(sql, noteId, (err, res) => {
@@ -97,7 +99,7 @@ export default class TaskNoteModel extends TaskNote {
    * @returns {Promise<boolean>}
    */
   static noteIdNotExists(noteId) {
-    const sql = selectNotExistsSql("`task_notes`", "`note_id` = ?")
+    const sql = selectNotExistsSql("`Note`", "`note_id` = ?")
 
     return new Promise((resolve, reject) => {
       db.query(sql, noteId, (err, res) => {

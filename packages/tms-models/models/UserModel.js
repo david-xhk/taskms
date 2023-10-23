@@ -71,7 +71,7 @@ export default class UserModel extends User {
    * @returns {Promise<void>}
    */
   static insertMany(args) {
-    const sql = insertSql("`users`", ["`username`", "`email`", "`password`", "`active`"])
+    const sql = insertSql("`User`", ["`username`", "`email`", "`password`", "`active`"])
     const values = args.map(({ username, email, password, active }) => [username, email, password, active])
 
     return new Promise((resolve, reject) => {
@@ -92,7 +92,7 @@ export default class UserModel extends User {
    * @returns {Promise<UserModel?>}
    */
   static async findByUsername(username) {
-    const sql = selectSql("`users`", { where: "`username` = ?" })
+    const sql = selectSql("`User`", { where: "`username` = ?" })
 
     return new Promise((resolve, reject) => {
       db.query(sql, username, (err, res) => {
@@ -112,7 +112,7 @@ export default class UserModel extends User {
    * @returns {Promise<string?>}
    */
   static selectPasswordByUsername(username) {
-    const sql = selectSql("`users`", { columns: "`password`", where: "`username` = ?" })
+    const sql = selectSql("`User`", { columns: "`password`", where: "`username` = ?" })
 
     return new Promise((resolve, reject) => {
       db.query(sql, username, (err, res) => {
@@ -132,7 +132,7 @@ export default class UserModel extends User {
    * @returns {Promise<UserModel?>}
    */
   static async findByEmail(email) {
-    const sql = selectSql("`users`", { where: "`email` = ?" })
+    const sql = selectSql("`User`", { where: "`email` = ?" })
 
     return new Promise((resolve, reject) => {
       db.query(sql, email, (err, res) => {
@@ -199,20 +199,21 @@ export default class UserModel extends User {
     if (groups !== undefined) {
       where.push("`group` IN ?")
       values.push([groups])
-      options.join = "`user_groups`"
-      options.on = "`user_groups`.`username` = `users`.`username`"
-      options.columns = "`users`.*"
+      options.join = "`User_Group`"
+      options.on = "`User_Group`.`username` = `User`.`username`"
+      options.columns = "`User`.*"
     }
     if (where.length > 0) {
       options.where = where.join(" AND ")
     }
+    options.orderBy = "`created_at` DESC"
     if (limit !== undefined) {
       options.limit = limit
       if (offset !== undefined) {
         options.offset = offset
       }
     }
-    const sql = selectSql("`users`", options)
+    const sql = selectSql("`User`", options)
 
     return new Promise((resolve, reject) => {
       db.query(sql, values, (err, res) => {
@@ -230,7 +231,7 @@ export default class UserModel extends User {
    * @returns {Promise<boolean>}
    */
   static usernameExists(username) {
-    const sql = selectExistsSql("`users`", "`username` = ?")
+    const sql = selectExistsSql("`User`", "`username` = ?")
 
     return new Promise((resolve, reject) => {
       db.query(sql, username, (err, res) => {
@@ -248,7 +249,7 @@ export default class UserModel extends User {
    * @returns {Promise<boolean>}
    */
   static usernameNotExists(username) {
-    const sql = selectNotExistsSql("`users`", "`username` = ?")
+    const sql = selectNotExistsSql("`User`", "`username` = ?")
 
     return new Promise((resolve, reject) => {
       db.query(sql, username, (err, res) => {
@@ -266,7 +267,7 @@ export default class UserModel extends User {
    * @returns {Promise<boolean>}
    */
   static emailExists(email) {
-    const sql = selectExistsSql("`users`", "`email` = ?")
+    const sql = selectExistsSql("`User`", "`email` = ?")
 
     return new Promise((resolve, reject) => {
       db.query(sql, email, (err, res) => {
@@ -284,7 +285,7 @@ export default class UserModel extends User {
    * @returns {Promise<boolean>}
    */
   static emailNotExists(email) {
-    const sql = selectNotExistsSql("`users`", "`email` = ?")
+    const sql = selectNotExistsSql("`User`", "`email` = ?")
 
     return new Promise((resolve, reject) => {
       db.query(sql, email, (err, res) => {
@@ -321,7 +322,7 @@ export default class UserModel extends User {
       columns.push("`active`")
       values.push(active)
     }
-    const sql = updateSql("`users`", columns, "`username` = ?")
+    const sql = updateSql("`User`", columns, "`username` = ?")
     values.push(username)
 
     return new Promise((resolve, reject) => {

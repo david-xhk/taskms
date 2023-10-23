@@ -1,6 +1,7 @@
 import { parseDate } from "@han-keong/tms-helpers/parseHelper"
-import { validateColour, validateDate, validatePlan } from "@han-keong/tms-validators/projectValidator"
+import { nullable } from "@han-keong/tms-validators"
 
+import { validateColour, validateDate, validatePlan } from "../validators/projectValidator.js"
 import { ValidationError } from "./errorHandler.js"
 import parseRequest from "./parseRequest.js"
 import validateRequest from "./validateRequest.js"
@@ -19,8 +20,8 @@ export const createPlanMiddleware = [
         }
       },
       colour: { required: true, validators: [validateColour] },
-      startDate: { required: true, validators: [validateDate] },
-      endDate: { required: true, validators: [validateDate] }
+      startDate: nullable(validateDate),
+      endDate: nullable(validateDate)
     },
     {
       postcondition: body => {

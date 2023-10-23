@@ -1,6 +1,6 @@
 {
   "name": "@han-keong/tms-types",
-  "version": "1.0.3",
+  "version": "2.0.0",
   "description": "Data types for the Task Management System",
   "license": "ISC",
   "author": "Xie Han Keong",
@@ -13,9 +13,7 @@
     "test": "echo \"No tests here yet\""
   },
   "dependencies": {
-    "@han-keong/tms-helpers": "^1.0.3"
-  },
-  "publishConfig": {
-    "access": "public"
+    "@han-keong/tms-helpers": "^2.0.0"
   }
 }
+

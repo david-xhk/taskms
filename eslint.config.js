@@ -1,10 +1,10 @@
-import js from "@eslint/js"
-import jsdoc from "eslint-plugin-jsdoc"
-import react from "eslint-plugin-react"
-import globals from "globals"
+const js = require("@eslint/js")
+const jsdoc = require("eslint-plugin-jsdoc")
+const globals = require("globals")
+const compat = new (require("@eslint/eslintrc").FlatCompat)()
 
 /** @type {import('eslint').Linter.FlatConfig[]} */
-export default [
+module.exports = [
   {
     ignores: ["dist/**", "node_modules/**"]
   },
@@ -40,14 +40,12 @@ export default [
         }
       }
     },
-    plugins: {
-      react: {
-        rules: react.rules
-      }
-    },
+    ...compat.plugins("react", "react-hooks")[0],
     rules: {
       "react/jsx-uses-react": "warn",
-      "react/jsx-uses-vars": "warn"
+      "react/jsx-uses-vars": "warn",
+      "react-hooks/rules-of-hooks": "error",
+      "react-hooks/exhaustive-deps": "warn"
     }
   }
 ]

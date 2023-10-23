@@ -8,7 +8,6 @@ export function getUser(req, res) {
 export async function updateUser(req, res, next) {
   const { email, password, active, groups } = req.body
   const { user } = res.locals
-  const promises = []
   const values = {}
   if (email !== undefined && email !== user.email) {
     values.email = email
@@ -20,23 +19,28 @@ export async function updateUser(req, res, next) {
     values.active = active
   }
   if (Object.keys(values).length > 0) {
-    promises.push(user.update(values))
+    try {
+      await user.update(values)
+    } catch (err) {
+      next(err)
+    }
   }
   if (groups !== undefined) {
     const groupsToAdd = getDifference(groups, user.groups)
     if (groupsToAdd.length > 0) {
-      promises.push(user.addToGroups(groupsToAdd))
+      try {
+        await user.addToGroups(groupsToAdd)
+      } catch (err) {
+        next(err)
+      }
     }
     const groupsToRemove = getDifference(user.groups, groups)
     if (groupsToRemove.length > 0) {
-      promises.push(user.removeFromGroups(groupsToRemove))
-    }
-  }
-  if (promises.length > 0) {
-    try {
-      await Promise.allSettled(promises)
-    } catch (err) {
-      return next(err)
+      try {
+        await user.removeFromGroups(groupsToRemove)
+      } catch (err) {
+        next(err)
+      }
     }
   }
   res.json({ success: true })

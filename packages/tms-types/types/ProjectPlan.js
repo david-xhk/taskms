@@ -1,3 +1,5 @@
+import { parseDate } from "@han-keong/tms-helpers/parseHelper"
+
 import Base from "./Base.js"
 
 export default class ProjectPlan extends Base {
@@ -28,13 +30,20 @@ export default class ProjectPlan extends Base {
   /** @readonly @type {Date} */
   updatedAt
 
+  static parsers = {
+    startDate: parseDate,
+    endDate: parseDate,
+    createdAt: parseDate,
+    updatedAt: parseDate
+  }
+
   /**
    * @param {object} data
-   * @param {string} data.project_name
-   * @param {string} data.plan_name
+   * @param {string} data.Plan_app_Acronym
+   * @param {string} data.Plan_MVP_name
    * @param {string} data.colour
-   * @param {Date} data.start_date
-   * @param {Date} data.end_date
+   * @param {Date} data.Plan_startDate
+   * @param {Date} data.Plan_endDate
    * @param {number} data.num_tasks
    * @param {string} data.created_by
    * @param {Date} data.created_at
@@ -42,11 +51,11 @@ export default class ProjectPlan extends Base {
    */
   constructor(data) {
     super()
-    this.project = data.project_name
-    this.planName = data.plan_name
+    this.project = data.Plan_app_Acronym
+    this.planName = data.Plan_MVP_name
     this.colour = data.colour
-    this.startDate = data.start_date
-    this.endDate = data.end_date
+    this.startDate = data.Plan_startDate
+    this.endDate = data.Plan_endDate
     this.numTasks = data.num_tasks
     this.createdBy = data.created_by
     this.createdAt = data.created_at

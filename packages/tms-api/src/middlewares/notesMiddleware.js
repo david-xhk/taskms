@@ -1,5 +1,4 @@
-import { validateNoteContent } from "@han-keong/tms-validators/projectValidator"
-
+import { validateNoteContent } from "../validators/projectValidator.js"
 import { ForbiddenError } from "./errorHandler.js"
 import validateRequest from "./validateRequest.js"
 
@@ -8,7 +7,7 @@ export const createNoteMiddleware = [
     "body",
     { content: { required: true, validators: [validateNoteContent] } },
     {
-      precondition: (body, req, res) => {
+      precondition: (_, req, res) => {
         if (!res.locals.project.isInPermitGroup(res.locals.task.state, req.user.groups)) {
           return new ForbiddenError()
         }

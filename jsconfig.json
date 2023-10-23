@@ -1,12 +1,1 @@
-{
-  "compilerOptions": {
-    "checkJs": true,
-    "module": "Node16",
-    "moduleResolution": "Node16",
-    "target": "ES2020",
-    "jsx": "react",
-    "strictNullChecks": true,
-    "strictFunctionTypes": true
-  },
-  "exclude": ["node_modules", "**/node_modules/*"]
-}
+{ "include": ["packages/**/*"] }

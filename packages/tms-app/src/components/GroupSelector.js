@@ -1,84 +1,135 @@
-import React, { useEffect, useRef, useState } from "react"
+import React, { memo, useRef } from "react"
+import FormControl from "react-bootstrap/FormControl"
 import { ReactTags } from "react-tag-autocomplete"
 
-import { validateGroup } from "@han-keong/tms-validators/groupValidator"
+import Truncate from "./Truncate"
 
-import API from "../api.js"
-import useAuth from "../hooks/useAuth.js"
-import useEventEmitter from "../hooks/useEventEmitter.js"
-import useFlashMessage from "../hooks/useFlashMessage.js"
+function GroupSelector(props) {
+  const { allowNew = false, allowCreate = false, disabled = false, groups = [], onChange, onCreate, onInput, placeholder, plaintext, readOnly, value, large, ...restProps } = props
 
-export default function GroupSelector(props) {
-  const { disabled, onChange, onError, onInput, placeholder, value, ...restProps } = props
+  const tagsRef = useRef(/** @type {import("react-tag-autocomplete/dist/types").ReactTagsAPI?} */ (null))
 
-  const [groups, setGroups] = useState(/** @type {string[]} */ ([]))
-  const [fetchOrdinal, setFetchOrdinal] = useState(0)
-  const tagsRef = useRef(/** @type {import("react-tag-autocomplete/dist/types.js").ReactTagsAPI?} */ (null))
-
-  const { loggedIn } = useAuth()
-  const flashMessage = useFlashMessage()
-  const { emit } = useEventEmitter("GroupSelector")
-
-  useEffect(() => {
-    if (loggedIn) {
-      emit("fetchGroupsEffect triggered")
-      return API.getGroups(res => {
-        if (res.data?.success) {
-          emit("fetchGroupsEffect success")
-          setGroups(res.data.data.map(data => data.group))
-        } else {
-          emit("fetchGroupsEffect fail")
-          flashMessage(res.data?.message ?? "Failed to fetch groups.", "danger")
-        }
-      })
+  const selected = (() => {
+    if (groups.length === 0) {
+      return value.map((group, index) => ({ label: group, value: index }))
+    } else {
+      return value.map(group => ({ label: group, value: groups.findIndex(value => value.group === group) }))
     }
-  }, [loggedIn, fetchOrdinal])
+  })()
 
-  function onAdd({ label: group }) {
-    if (groups.includes(group)) {
-      emit("addGroup", { group })
-      onChange([...value, group])
+  const suggestions = (() => {
+    if (groups.length === 0) {
+      return value.map((group, index) => ({ label: group, value: index }))
+    } else {
+      return groups.map((group, index) => ({ label: group.group, value: index }))
+    }
+  })()
+
+  const placeholderText = readOnly || disabled ? (selected.length === 0 ? "null" : "​") : placeholder
+
+  const classes = []
+  if (large) {
+    classes.push("react-tags-large")
+  }
+  if (plaintext) {
+    classes.push("react-tags-plaintext")
+  }
+  if (readOnly) {
+    classes.push("react-tags-readonly")
+  }
+  if ((readOnly || disabled) && selected.length === 0) {
+    classes.push("text-muted")
+  }
+
+  if (readOnly) {
+    return selected.length === 0 ? (
+      <FormControl plaintext readOnly value="null" className="text-muted me-4 cursor-unset" />
+    ) : (
+      <div className={classes.join(" ")}>
+        <div className="react-tags">
+          <ul className="react-tags__list">
+            {selected.map((value, index) => (
+              <li className="react-tags__list-item" key={index}>
+                <div className="react-tags__tag">
+                  <Truncate text={value.label} length={15} className="react-tags__tag-name" />
+                </div>
+              </li>
+            ))}
+          </ul>
+          <div className="react-tags__combobox">
+            <input className="react-tags__combobox-input me-4" />
+          </div>
+        </div>
+      </div>
+    )
+  }
+
+  async function onAdd({ label }) {
+    if (groups.find(group => group.group === label)) {
+      onChange([...value, label])
       return
     }
-    emit("createGroup", { group })
-    API.postGroups({ data: { group } }, res => {
-      if (res.data?.success) {
-        emit("createGroup success")
-        flashMessage("👥 New group created!", "success")
-        setFetchOrdinal(x => x + 1)
-        onChange([...value, group])
-      } else if (res.data?.errors) {
-        emit("createGroup errors")
-        onError(res.data.errors)
-      } else {
-        emit("createGroup fail")
-        flashMessage(res.data?.message ?? "Failed to create group.", "danger")
-      }
-    })
+    if (onCreate) {
+      setTimeout(async () => {
+        onInput(label)
+        await onCreate(label)
+        onInput("")
+        onChange([...value, label])
+      })
+    }
   }
 
   function onDelete(index) {
-    emit("deleteGroup", { index })
     onChange(value.filter((_, i) => i !== index))
   }
 
   function onValidate(input) {
-    return !groups?.includes(input) && validateGroup(input)
+    return !groups.find(group => group.group === input) && allowCreate
   }
 
   function suggestionsTransform(input, suggestions) {
     return suggestions.filter(({ label }) => label.includes(input))
   }
 
+  /** @type {React.KeyboardEventHandler<HTMLDivElement>} */
+  function onKeyDown(event) {
+    if (!tagsRef.current || !tagsRef.current.listBox.isExpanded) {
+      return
+    }
+    if (event.key === "Escape") {
+      tagsRef.current.listBox.collapse()
+      tagsRef.current.input.blur()
+      tagsRef.current.input.value = ""
+    }
+    if (event.key === "Enter" || event.key === "Escape") {
+      event.stopPropagation()
+    }
+  }
+
+  function onMouseLeave() {
+    if (tagsRef.current) {
+      tagsRef.current.listBox.collapse()
+      tagsRef.current.input.blur()
+    }
+  }
+
+  function CustomTag({ classNames, tag, ...tagProps }) {
+    delete tagProps.title
+    return (
+      <div className={classNames.tag} {...tagProps}>
+        <Truncate text={tag.label} length={15} className={classNames.tagName} />
+      </div>
+    )
+  }
+
   return (
-    <div {...restProps} onMouseLeave={() => tagsRef.current?.listBox.collapse()}>
+    <div {...restProps} className={classes.join(" ")} onKeyDown={onKeyDown} onMouseLeave={onMouseLeave}>
       <ReactTags
-        activateFirstOption={true}
-        allowBackspace={true}
-        allowNew={true}
-        allowResize={true}
+        activateFirstOption={false}
+        allowBackspace
+        allowNew={allowNew}
+        allowResize={false}
         collapseOnSelect={false}
-        deleteButtonText="Remove from '%value%' group"
         delimiterKeys={[",", "Enter"]}
         id="groups"
         isDisabled={disabled}
@@ -87,13 +138,17 @@ export default function GroupSelector(props) {
         onAdd={onAdd}
         onDelete={onDelete}
         onInput={onInput}
+        // onShouldCollapse={() => false} // for debugging purposes
         onValidate={onValidate}
-        placeholderText={disabled ? "​" : placeholder} // For admins
+        placeholderText={placeholderText}
         ref={tagsRef}
-        selected={value.map(group => ({ label: group, value: groups.indexOf(group) }))}
-        suggestions={groups.map((group, index) => ({ label: group, value: index }))}
+        renderTag={CustomTag}
+        selected={selected}
+        suggestions={suggestions}
         suggestionsTransform={suggestionsTransform}
       />
     </div>
   )
 }
+
+export default memo(GroupSelector)

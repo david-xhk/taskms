@@ -1,6 +1,6 @@
-import { validateDescription, validatePlan, validateTask } from "@han-keong/tms-validators/projectValidator"
-import { nullable } from "@han-keong/tms-validators/validators"
+import { nullable } from "@han-keong/tms-validators"
 
+import { validateDescription, validateNoteContent, validatePlan, validateTask } from "../validators/projectValidator.js"
 import { ForbiddenError, ValidationError } from "./errorHandler.js"
 import validateRequest from "./validateRequest.js"
 
@@ -19,7 +19,8 @@ export const createTaskMiddleware = [
             }
           }
         }
-      }
+      },
+      note: nullable(validateNoteContent)
     },
     {
       precondition: (_, req, res) => {

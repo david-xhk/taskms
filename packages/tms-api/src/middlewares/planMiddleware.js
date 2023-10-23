@@ -1,7 +1,8 @@
 import { parseDate } from "@han-keong/tms-helpers/parseHelper"
-import { validateColour, validateDate, validatePlan } from "@han-keong/tms-validators/projectValidator"
+import { nullable } from "@han-keong/tms-validators"
 
-import { ErrorMessage, ForbiddenError, ValidationError } from "./errorHandler.js"
+import { validateColour, validateDate, validatePlan } from "../validators/projectValidator.js"
+import { ErrorMessage, ValidationError } from "./errorHandler.js"
 import parseRequest from "./parseRequest.js"
 import validateRequest, { validateParam } from "./validateRequest.js"
 
@@ -19,12 +20,9 @@ export async function plan(req, res, next) {
 export const updatePlanMiddleware = [
   validateRequest(
     "body",
-    { colour: validateColour, startDate: validateDate, endDate: validateDate },
+    { colour: validateColour, startDate: nullable(validateDate), endDate: nullable(validateDate) },
     {
-      precondition: (body, req, res) => {
-        if (req.user.username !== res.locals.plan.createdBy) {
-          return new ForbiddenError()
-        }
+      precondition: body => {
         const { colour, startDate, endDate } = body
         if (colour === undefined && startDate === undefined && endDate === undefined) {
           return new ErrorMessage("Nothing to update.", 400)
@@ -38,11 +36,11 @@ export const updatePlanMiddleware = [
             return ValidationError.fromErrors({ startDate: "startDate must be before endDate" })
           }
         } else if (startDate && !endDate) {
-          if (startDate > res.locals.plan.endDate) {
+          if (res.locals.plan.endDate && startDate > res.locals.plan.endDate) {
             return ValidationError.fromErrors({ startDate: "startDate must be before current endDate" })
           }
         } else if (!startDate && endDate) {
-          if (res.locals.plan.startDate > endDate) {
+          if (res.locals.plan.startDate && res.locals.plan.startDate > endDate) {
             return ValidationError.fromErrors({ endDate: "endDate must be after current startDate" })
           }
         }

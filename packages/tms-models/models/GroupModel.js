@@ -15,7 +15,7 @@ export default class GroupModel extends Group {
    * @returns {Promise<void>}
    */
   static insertMany(groups) {
-    const sql = insertSql("`groups`", "`group`")
+    const sql = insertSql("`Group`", "`group`")
     const values = groups.map(group => [group])
 
     return new Promise((resolve, reject) => {
@@ -35,7 +35,7 @@ export default class GroupModel extends Group {
    * @returns {Promise<GroupModel[]>}
    */
   static findAll() {
-    const sql = selectSql("`groups`")
+    const sql = selectSql("`Group`", { orderBy: "`created_at` ASC" })
 
     return new Promise((resolve, reject) => {
       db.query(sql, (err, res) => {
@@ -53,7 +53,7 @@ export default class GroupModel extends Group {
    * @returns {Promise<boolean>}
    */
   static groupExists(group) {
-    const sql = selectExistsSql("`groups`", "`group` = ?")
+    const sql = selectExistsSql("`Group`", "`group` = ?")
 
     return new Promise((resolve, reject) => {
       db.query(sql, group, (err, res) => {
@@ -71,7 +71,7 @@ export default class GroupModel extends Group {
    * @returns {Promise<boolean>}
    */
   static groupNotExists(group) {
-    const sql = selectNotExistsSql("`groups`", "`group` = ?")
+    const sql = selectNotExistsSql("`Group`", "`group` = ?")
 
     return new Promise((resolve, reject) => {
       db.query(sql, group, (err, res) => {

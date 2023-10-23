@@ -1,4 +1,5 @@
 import { hasIntersection } from "@han-keong/tms-helpers/arrayHelper"
+import { parseDate } from "@han-keong/tms-helpers/parseHelper"
 
 import Base from "./Base.js"
 
@@ -20,6 +21,11 @@ export default class User extends Base {
 
   /** @readonly @type {Date} */
   updatedAt
+
+  static parsers = {
+    createdAt: parseDate,
+    updatedAt: parseDate
+  }
 
   /**
    * @param {object} data
@@ -54,7 +60,15 @@ export default class User extends Base {
     return hasIntersection(this.groups, groups)
   }
 
-  isAdmin() {
+  get isAdmin() {
     return this.isInGroup("admin")
+  }
+
+  get isProjectLead() {
+    return this.isInGroup("pl")
+  }
+
+  get isProjectManager() {
+    return this.isInGroup("pm")
   }
 }

@@ -1,53 +1,68 @@
 import React, { Suspense } from "react"
-import ReactDOM from "react-dom/client"
-import { BrowserRouter, Route, Routes } from "react-router-dom"
+import { createRoot } from "react-dom/client"
+import { Outlet, Route, RouterProvider, createBrowserRouter, createRoutesFromElements } from "react-router-dom"
+import { Tooltip } from "react-tooltip"
 
-import Footer from "./components/Footer.js"
-import Header from "./components/Header.js"
-import { AuthProvider } from "./hooks/useAuth.js"
-import { EventEmitterProvider } from "./hooks/useEventEmitter.js"
-import { FlashMessageProvider } from "./hooks/useFlashMessage.js"
-import AboutPage from "./pages/AboutPage.js"
-import CreateProfilePage from "./pages/CreateProfilePage.js"
-import EditProfilePage from "./pages/EditProfilePage.js"
-import HomePage from "./pages/HomePage.js"
-import LoadingDotsPage from "./pages/LoadingDotsPage.js"
-import ManageUsersPage from "./pages/ManageUsersPage.js"
-import NotFoundPage from "./pages/NotFoundPage.js"
-import TermsPage from "./pages/TermsPage.js"
+import Footer from "src/components/Footer"
+import Navbar from "src/components/Navbar"
+import AuthProvider from "src/contexts/AuthContext/AuthProvider"
+import EventEmitterProvider from "src/contexts/EventEmitterContext/EventEmitterProvider"
+import FlashMessageProvider from "src/contexts/FlashMessageContext/FlashMessageProvider"
+import AboutPage from "src/pages/AboutPage"
+import AccountPage from "src/pages/AccountPage"
+import AppPage from "src/pages/AppPage"
+import AppsPage from "src/pages/AppsPage"
+import AppsRoot from "src/pages/AppsRoot"
+import HomePage from "src/pages/HomePage"
+import LoadingDotsPage from "src/pages/LoadingDotsPage"
+import NotFoundPage from "src/pages/NotFoundPage"
+import PlansPage from "src/pages/PlansPage"
+import TermsPage from "src/pages/TermsPage"
+import UsersPage from "src/pages/UsersPage"
 
-function Main() {
+const router = createBrowserRouter(
+  createRoutesFromElements(
+    <Route path="/" Component={Root}>
+      <Route index Component={HomePage} />
+      <Route path="apps" Component={AppsRoot}>
+        <Route index Component={AppsPage} />
+        <Route path=":appName">
+          <Route index Component={AppPage} />
+          <Route path="plans" Component={PlansPage} />
+        </Route>
+      </Route>
+      <Route path="users" Component={UsersPage} />
+      <Route path="account" Component={AccountPage} />
+      <Route path="about" Component={AboutPage} />
+      <Route path="terms" Component={TermsPage} />
+      <Route path="*" Component={NotFoundPage} />
+    </Route>
+  )
+)
+
+function Root() {
   return (
     <EventEmitterProvider>
       <FlashMessageProvider>
         <AuthProvider>
-          <BrowserRouter>
-            <Header />
-            <Suspense fallback={<LoadingDotsPage />}>
-              <Routes>
-                <Route path="/" element={<HomePage />} />
-                <Route path="/users" element={<ManageUsersPage />} />
-                <Route path="/users/new" element={<CreateProfilePage />} />
-                <Route path="/user" element={<EditProfilePage />} />
-                <Route path="/about" element={<AboutPage />} />
-                <Route path="/terms" element={<TermsPage />} />
-                <Route path="*" element={<NotFoundPage />} />
-              </Routes>
-            </Suspense>
-            <Footer />
-          </BrowserRouter>
+          <Navbar />
+          <Suspense fallback={<LoadingDotsPage />}>
+            <Outlet />
+          </Suspense>
+          <Footer />
+          <Tooltip className="custom-tooltip text-break" id="my-tooltip" place="bottom" />
         </AuthProvider>
       </FlashMessageProvider>
     </EventEmitterProvider>
   )
 }
 
-const app = document.querySelector("#app")
+const app = document.getElementById("app")
 if (app) {
-  const root = ReactDOM.createRoot(app)
-  root.render(<Main />)
+  const root = createRoot(app)
+  root.render(<RouterProvider router={router} />)
 }
 
-if (import.meta.webpackHot) {
-  import.meta.webpackHot.accept()
+if (module.hot) {
+  module.hot.accept()
 }

@@ -1,3 +1,5 @@
+import { parseDate } from "@han-keong/tms-helpers/parseHelper"
+
 import Base from "./Base.js"
 
 export default class UserGroup extends Base {
@@ -9,6 +11,10 @@ export default class UserGroup extends Base {
 
   /** @readonly @type {Date} */
   createdAt
+
+  static parsers = {
+    createdAt: parseDate
+  }
 
   /**
    * @param {object} data

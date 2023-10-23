@@ -24,7 +24,7 @@ export default class ProjectPermitModel extends ProjectPermit {
    * @returns {Promise<void>}
    */
   static insertMany(args) {
-    const sql = insertSql("`project_permits`", ["`project_name`", "`permit`", "`group`"])
+    const sql = insertSql("`App_Permit`", ["`App_Acronym`", "`permit`", "`group`"])
     const values = args.map(({ project, permit, group }) => [project, permit, group])
 
     return new Promise((resolve, reject) => {
@@ -45,7 +45,7 @@ export default class ProjectPermitModel extends ProjectPermit {
    * @returns {Promise<ProjectPermitModel[]>}
    */
   static findByProjectName(project) {
-    const sql = selectSql("`project_permits`", { where: "`project_name` = ?" })
+    const sql = selectSql("`App_Permit`", { where: "`App_Acronym` = ?", orderBy: "`created_at` DESC" })
 
     return new Promise((resolve, reject) => {
       db.query(sql, project, (err, res) => {
@@ -64,7 +64,7 @@ export default class ProjectPermitModel extends ProjectPermit {
    * @returns {Promise<ProjectPermitModel[]>}
    */
   static findByProjectPermit(project, permit) {
-    const sql = selectSql("`project_permits`", { where: "`project_name` = ? AND `permit` = ?" })
+    const sql = selectSql("`App_Permit`", { where: "`App_Acronym` = ? AND `permit` = ?", orderBy: "`created_at` DESC" })
 
     return new Promise((resolve, reject) => {
       db.query(sql, [project, permit], (err, res) => {
@@ -96,7 +96,7 @@ export default class ProjectPermitModel extends ProjectPermit {
    * @returns {Promise<boolean>}
    */
   static projectPermitsExist(args) {
-    const sql = selectExistsSql("`project_permits`", "(`project_name`, `permit`, `group`) IN ?")
+    const sql = selectExistsSql("`App_Permit`", "(`App_Acronym`, `permit`, `group`) IN ?")
     const values = args.map(({ project, permit, group }) => [project, permit, group])
 
     return new Promise((resolve, reject) => {
@@ -129,7 +129,7 @@ export default class ProjectPermitModel extends ProjectPermit {
    * @returns {Promise<boolean>}
    */
   static projectPermitsNotExist(args) {
-    const sql = selectNotExistsSql("`project_permits`", "(`project_name`, `permit`, `group`) IN ?")
+    const sql = selectNotExistsSql("`App_Permit`", "(`App_Acronym`, `permit`, `group`) IN ?")
     const values = args.map(({ project, permit, group }) => [project, permit, group])
 
     return new Promise((resolve, reject) => {
@@ -160,7 +160,7 @@ export default class ProjectPermitModel extends ProjectPermit {
    * @returns {Promise<void>}
    */
   static deleteMany(args) {
-    const sql = deleteSql("`project_permits`", "(`project_name`, `permit`, `group`) IN ?")
+    const sql = deleteSql("`App_Permit`", "(`App_Acronym`, `permit`, `group`) IN ?")
     const values = args.map(({ project, permit, group }) => [project, permit, group])
 
     return new Promise((resolve, reject) => {

@@ -9,7 +9,6 @@ export function getProject(req, res) {
 export async function updateProject(req, res, next) {
   const { startDate, endDate, description } = req.body
   const { project } = res.locals
-  const promises = []
   const values = {}
   if (startDate !== undefined && (startDate === null || project.startDate === null || startDate.toDateString() !== project.startDate.toDateString())) {
     values.startDate = startDate
@@ -21,26 +20,31 @@ export async function updateProject(req, res, next) {
     values.description = description
   }
   if (Object.keys(values).length > 0) {
-    promises.push(project.update(values))
+    try {
+      await project.update(values)
+    } catch (err) {
+      next(err)
+    }
   }
   for (let permit of ["create", "open", "todo", "doing", "done"]) {
     const permits = req.body["permit" + capitalize(permit)]
     if (permits !== undefined) {
       const permitsToAdd = getDifference(permits, project.permit[permit])
       if (permitsToAdd.length > 0) {
-        promises.push(project.addGroupPermits(permit, permitsToAdd))
+        try {
+          await project.addGroupPermits(permit, permitsToAdd)
+        } catch (err) {
+          next(err)
+        }
       }
       const permitsToRemove = getDifference(project.permit[permit], permits)
       if (permitsToRemove.length > 0) {
-        promises.push(project.removeGroupPermits(permit, permitsToRemove))
+        try {
+          await project.removeGroupPermits(permit, permitsToRemove)
+        } catch (err) {
+          next(err)
+        }
       }
-    }
-  }
-  if (promises.length > 0) {
-    try {
-      await Promise.allSettled(promises)
-    } catch (err) {
-      return next(err)
     }
   }
   res.json({ success: true })

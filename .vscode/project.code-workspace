@@ -1,0 +1,62 @@
+{
+  "folders": [
+    {
+      "name": "tms",
+      "path": "../"
+    },
+    {
+      "name": "tms-api",
+      "path": "../packages/tms-api"
+    },
+    {
+      "name": "tms-app",
+      "path": "../packages/tms-app"
+    },
+    {
+      "name": "tms-db",
+      "path": "../packages/tms-db"
+    },
+    {
+      "name": "tms-helpers",
+      "path": "../packages/tms-helpers"
+    },
+    {
+      "name": "tms-models",
+      "path": "../packages/tms-models"
+    },
+    {
+      "name": "tms-restful-api",
+      "path": "../packages/tms-restful-api"
+    },
+    {
+      "name": "tms-types",
+      "path": "../packages/tms-types"
+    },
+    {
+      "name": "tms-validators",
+      "path": "../packages/tms-validators"
+    }
+  ],
+  "settings": {
+    "files.exclude": {
+      "node_modules": true,
+      "packages": true
+    },
+    "eslint.experimental.useFlatConfig": true
+  },
+  "tasks": {
+    "version": "2.0.0",
+    "tasks": [
+      {
+        "label": "eslint: lint whole folder",
+        "type": "process",
+        "command": "node_modules/.bin/eslint.cmd",
+        "args": ["."],
+        "options": {
+          "cwd": "${workspaceFolder}"
+        },
+        "problemMatcher": ["$tsc"]
+      }
+    ]
+  }
+}

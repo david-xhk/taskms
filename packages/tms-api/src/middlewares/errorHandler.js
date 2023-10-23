@@ -1,5 +1,7 @@
 import { join, sentencify } from "@han-keong/tms-helpers/stringHelper"
-import { getErrors, setErrors } from "@han-keong/tms-validators/validators"
+import { getErrors, setErrors } from "@han-keong/tms-validators"
+
+import config from "../config.js"
 
 export class ErrorMessage extends Error {
   constructor(message, statusCode) {
@@ -32,7 +34,7 @@ export class ValidationError extends Error {
 
 export default function errorHandler(err, req, res, next) {
   err.statusCode = err.statusCode || 500
-  if (process.env.NODE_ENV === "production") {
+  if (config.NODE_ENV === "production") {
     let error = err
     if (error.name === "JsonWebTokenError") {
       error = new ErrorMessage("JSON Web Token is invalid.", 500)
@@ -45,7 +47,7 @@ export default function errorHandler(err, req, res, next) {
       message: error.message || "Internal Server Error.",
       errors: error.errors
     })
-  } else if (process.env.NODE_ENV === "development") {
+  } else if (config.NODE_ENV === "development") {
     res.status(err.statusCode).json({
       success: false,
       message: err.message,

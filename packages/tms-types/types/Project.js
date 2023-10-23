@@ -1,4 +1,5 @@
 import { hasIntersection } from "@han-keong/tms-helpers/arrayHelper"
+import { parseDate } from "@han-keong/tms-helpers/parseHelper"
 
 import Base from "./Base.js"
 
@@ -36,18 +37,25 @@ export default class Project extends Base {
   /** @readonly @type {Date} */
   updatedAt
 
+  static parsers = {
+    startDate: parseDate,
+    endDate: parseDate,
+    createdAt: parseDate,
+    updatedAt: parseDate
+  }
+
   /**
    * @param {object} data
-   * @param {string} data.project_name
-   * @param {number} data.running_num
-   * @param {string?} data.permit_create
-   * @param {string?} data.permit_open
-   * @param {string?} data.permit_todo
-   * @param {string?} data.permit_doing
-   * @param {string?} data.permit_done
-   * @param {Date?} data.start_date
-   * @param {Date?} data.end_date
-   * @param {string?} data.description
+   * @param {string} data.App_Acronym
+   * @param {number} data.App_Rnumber
+   * @param {string?} data.App_permit_Create
+   * @param {string?} data.App_permit_Open
+   * @param {string?} data.App_permit_toDoList
+   * @param {string?} data.App_permit_Doing
+   * @param {string?} data.App_permit_Done
+   * @param {Date?} data.App_startDate
+   * @param {Date?} data.App_endDate
+   * @param {string?} data.App_Description
    * @param {number} data.num_plans
    * @param {number} data.num_tasks
    * @param {string} data.created_by
@@ -56,18 +64,18 @@ export default class Project extends Base {
    */
   constructor(data) {
     super()
-    this.projectName = data.project_name
-    this.runningNum = data.running_num
+    this.projectName = data.App_Acronym
+    this.runningNum = data.App_Rnumber
     this.permit = {
-      create: data.permit_create ? data.permit_create.split(",") : [],
-      open: data.permit_open ? data.permit_open.split(",") : [],
-      todo: data.permit_todo ? data.permit_todo.split(",") : [],
-      doing: data.permit_doing ? data.permit_doing.split(",") : [],
-      done: data.permit_done ? data.permit_done.split(",") : []
+      create: data.App_permit_Create ? data.App_permit_Create.split(",") : [],
+      open: data.App_permit_Open ? data.App_permit_Open.split(",") : [],
+      todo: data.App_permit_toDoList ? data.App_permit_toDoList.split(",") : [],
+      doing: data.App_permit_Doing ? data.App_permit_Doing.split(",") : [],
+      done: data.App_permit_Done ? data.App_permit_Done.split(",") : []
     }
-    this.startDate = data.start_date
-    this.endDate = data.end_date
-    this.description = data.description
+    this.startDate = data.App_startDate
+    this.endDate = data.App_endDate
+    this.description = data.App_Description
     this.numPlans = data.num_plans
     this.numTasks = data.num_tasks
     this.createdBy = data.created_by

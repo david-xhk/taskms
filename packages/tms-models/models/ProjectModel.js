@@ -109,8 +109,22 @@ export default class ProjectModel extends Project {
     return ProjectTaskModel.findByTaskId(`${this.projectName}_${taskNum}`)
   }
 
+  /**
+   * @param {string} createdBy
+   */
+  getLastCreatedTaskBy(createdBy) {
+    return ProjectTaskModel.findByCreator(this.projectName, createdBy, 1).then(tasks => (tasks.length === 1 ? tasks[0] : null))
+  }
+
   getAllTasks() {
     return ProjectTaskModel.findByProjectName(this.projectName)
+  }
+
+  /**
+   * @param {NonNullable<ProjectTaskModel["state"]>} state
+   */
+  getTasksByState(state) {
+    return ProjectTaskModel.findAll({ project: this.projectName, state })
   }
 
   /**
@@ -152,7 +166,7 @@ export default class ProjectModel extends Project {
    * @returns {Promise<void>}
    */
   static insertMany(args) {
-    const sql = insertSql("`projects`", ["`project_name`", "`running_num`", "`start_date`", "`end_date`", "`description`", "`created_by`"])
+    const sql = insertSql("`Application`", ["`App_Acronym`", "`App_Rnumber`", "`App_startDate`", "`App_endDate`", "`App_Description`", "`created_by`"])
     const values = args.map(({ project, runningNum, startDate, endDate, description, createdBy }) => [project, runningNum, startDate, endDate, description, createdBy])
 
     return new Promise((resolve, reject) => {
@@ -173,7 +187,7 @@ export default class ProjectModel extends Project {
    * @returns {Promise<ProjectModel?>}
    */
   static findByProjectName(project) {
-    const sql = selectSql("`projects`", { where: "`project_name` = ?" })
+    const sql = selectSql("`Application`", { where: "`App_Acronym` = ?" })
 
     return new Promise((resolve, reject) => {
       db.query(sql, project, (err, res) => {
@@ -235,23 +249,23 @@ export default class ProjectModel extends Project {
     const where = []
     const values = []
     if (q !== undefined) {
-      where.push("`project_name` LIKE ?")
+      where.push("`App_Acronym` LIKE ?")
       values.push(`%${q}%`)
     }
     if (startsAfter !== undefined) {
-      where.push("DATEDIFF(`start_date`, ?) > 0")
+      where.push("DATEDIFF(`App_startDate`, ?) > 0")
       values.push(startsAfter)
     }
     if (startsBefore !== undefined) {
-      where.push("DATEDIFF(?, `start_date`) > 0")
+      where.push("DATEDIFF(?, `App_startDate`) > 0")
       values.push(startsBefore)
     }
     if (endsAfter !== undefined) {
-      where.push("DATEDIFF(`end_date`, ?) > 0")
+      where.push("DATEDIFF(`App_endDate`, ?) > 0")
       values.push(endsAfter)
     }
     if (endsBefore !== undefined) {
-      where.push("DATEDIFF(?, `end_date`) > 0")
+      where.push("DATEDIFF(?, `App_endDate`) > 0")
       values.push(endsBefore)
     }
     if (createdBy !== undefined) {
@@ -261,13 +275,14 @@ export default class ProjectModel extends Project {
     if (where.length > 0) {
       options.where = where.join(" AND ")
     }
+    options.orderBy = "`created_at` DESC"
     if (limit !== undefined) {
       options.limit = limit
       if (offset !== undefined) {
         options.offset = offset
       }
     }
-    const sql = selectSql("`projects`", options)
+    const sql = selectSql("`Application`", options)
 
     return new Promise((resolve, reject) => {
       db.query(sql, values, (err, res) => {
@@ -285,7 +300,7 @@ export default class ProjectModel extends Project {
    * @returns {Promise<boolean>}
    */
   static projectExists(project) {
-    const sql = selectExistsSql("`projects`", "`project_name` = ?")
+    const sql = selectExistsSql("`Application`", "`App_Acronym` = ?")
 
     return new Promise((resolve, reject) => {
       db.query(sql, project, (err, res) => {
@@ -303,7 +318,7 @@ export default class ProjectModel extends Project {
    * @returns {Promise<boolean>}
    */
   static projectNotExists(project) {
-    const sql = selectNotExistsSql("`projects`", "`project_name` = ?")
+    const sql = selectNotExistsSql("`Application`", "`App_Acronym` = ?")
 
     return new Promise((resolve, reject) => {
       db.query(sql, project, (err, res) => {
@@ -329,18 +344,18 @@ export default class ProjectModel extends Project {
     const columns = []
     const values = []
     if (startDate !== undefined) {
-      columns.push("`start_date`")
+      columns.push("`App_startDate`")
       values.push(startDate)
     }
     if (endDate !== undefined) {
-      columns.push("`end_date`")
+      columns.push("`App_endDate`")
       values.push(endDate)
     }
     if (description !== undefined) {
-      columns.push("`description`")
+      columns.push("`App_Description`")
       values.push(description)
     }
-    const sql = updateSql("`projects`", columns, "`project_name` = ?")
+    const sql = updateSql("`Application`", columns, "`App_Acronym` = ?")
     values.push(project)
 
     return new Promise((resolve, reject) => {

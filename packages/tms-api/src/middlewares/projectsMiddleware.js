@@ -1,10 +1,8 @@
 import { parseArray, parseDate, parseInteger } from "@han-keong/tms-helpers/parseHelper"
-import { validateGroupsExist } from "@han-keong/tms-models/validators/groupValidator"
-import { validateProjectNotExists } from "@han-keong/tms-models/validators/projectValidator"
-import { validateGroups } from "@han-keong/tms-validators/groupValidator"
-import { validateDate, validateDescription, validateProject, validateRunningNum } from "@han-keong/tms-validators/projectValidator"
-import { nullable } from "@han-keong/tms-validators/validators"
+import { nullable } from "@han-keong/tms-validators"
 
+import { validateGroups, validateGroupsExist } from "../validators/groupValidator.js"
+import { validateDate, validateDescription, validateProject, validateProjectNotExists, validateRunningNum } from "../validators/projectValidator.js"
 import { ValidationError } from "./errorHandler.js"
 import parseRequest from "./parseRequest.js"
 import validateRequest from "./validateRequest.js"

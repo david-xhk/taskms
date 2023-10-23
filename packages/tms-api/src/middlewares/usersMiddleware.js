@@ -1,11 +1,9 @@
 import bcrypt from "bcryptjs"
 
 import { parseArray, parseBoolean } from "@han-keong/tms-helpers/parseHelper"
-import { validateGroupsExist } from "@han-keong/tms-models/validators/groupValidator"
-import { validateEmailNotExists, validateUsernameNotExists } from "@han-keong/tms-models/validators/userValidator"
-import { validateGroups } from "@han-keong/tms-validators/groupValidator"
-import { validateActive, validateEmail, validatePassword, validateUsername } from "@han-keong/tms-validators/userValidator"
 
+import { validateGroups, validateGroupsExist } from "../validators/groupValidator.js"
+import { validateActive, validateEmail, validateEmailNotExists, validatePassword, validateUsername, validateUsernameNotExists } from "../validators/userValidator.js"
 import parseRequest from "./parseRequest.js"
 import validateRequest from "./validateRequest.js"
 

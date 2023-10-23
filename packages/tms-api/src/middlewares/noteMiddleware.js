@@ -1,5 +1,4 @@
-import { validateNoteNum } from "@han-keong/tms-validators/projectValidator"
-
+import { validateNoteNum } from "../validators/projectValidator.js"
 import { ValidationError } from "./errorHandler.js"
 import { validateParam } from "./validateRequest.js"
 

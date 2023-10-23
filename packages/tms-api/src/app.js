@@ -1,19 +1,19 @@
 import cookieParser from "cookie-parser"
 import cors from "cors"
-import dotenv from "dotenv"
 import express, { json as bodyParser, urlencoded as urlEncodedParser } from "express"
-import { existsSync } from "node:fs"
 
 import db from "@han-keong/tms-db"
+
+import config from "./config.js"
 import { authentication, authorization } from "./middlewares/authMiddleware.js"
 import errorHandler, { ErrorMessage } from "./middlewares/errorHandler.js"
 import { logRequest } from "./middlewares/logRequest.js"
-import authRouter from "./routes/authRouter.js"
-import groupsRouter from "./routes/groupsRouter.js"
-import projectRouter from "./routes/projectRouter.js"
-import projectsRouter from "./routes/projectsRouter.js"
-import userRouter from "./routes/userRouter.js"
-import usersRouter from "./routes/usersRouter.js"
+import authRouter from "./routers/authRouter.js"
+import groupsRouter from "./routers/groupsRouter.js"
+import projectRouter from "./routers/projectRouter.js"
+import projectsRouter from "./routers/projectsRouter.js"
+import userRouter from "./routers/userRouter.js"
+import usersRouter from "./routers/usersRouter.js"
 
 // Initialize the server
 process.on("uncaughtException", err => {
@@ -22,16 +22,11 @@ process.on("uncaughtException", err => {
   process.exit(1)
 })
 
-if (existsSync(".env")) {
-  console.log("Loading environment variables from file: .env")
-  dotenv.config({ path: ".env" })
-}
-
 db.connect({
-  host: process.env.DB_HOST,
-  user: process.env.DB_USER,
-  password: process.env.DB_PASSWORD,
-  database: process.env.DB_DATABASE,
+  host: config.DB_HOST,
+  user: config.DB_USER,
+  password: config.DB_PASSWORD,
+  database: config.DB_DATABASE,
   waitForConnections: true,
   connectionLimit: 100,
   maxIdle: 10,
@@ -47,7 +42,7 @@ const app = express()
 app.use(logRequest)
 
 // Middleware for handling security headers
-app.use(cors({ origin: process.env.WEB_BASE_URL, credentials: true }))
+app.use(cors({ origin: config.WEB_BASE_URL, credentials: true }))
 
 // Middleware for parsing requests
 app.use(bodyParser())
@@ -58,7 +53,7 @@ app.use(cookieParser())
 
 // Middleware for routing requests
 app.get("/api", function redirectToPostmanCollection(req, res) {
-  res.redirect(process.env.POSTMAN_COLLECTION_URL)
+  res.redirect(config.POSTMAN_COLLECTION_URL)
 })
 
 app.get("/api/ip", (req, res) => res.send(req.ip))
@@ -85,8 +80,8 @@ app.all("*", function unknownRoutes(req, res, next) {
 app.use(errorHandler)
 
 // Start the server
-const server = app.listen(process.env.PORT, () => {
-  console.log(`Server started on port ${process.env.PORT} in ${process.env.NODE_ENV} mode.`)
+const server = app.listen(config.PORT, () => {
+  console.log(`Server started on port ${config.PORT} in ${config.NODE_ENV} mode.`)
 })
 
 process.on("unhandledRejection", err => {

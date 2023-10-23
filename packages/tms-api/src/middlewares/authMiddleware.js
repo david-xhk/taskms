@@ -2,6 +2,7 @@ import jwt from "jsonwebtoken"
 
 import UserModel from "@han-keong/tms-models/UserModel"
 
+import config from "../config.js"
 import { ErrorMessage, ForbiddenError } from "./errorHandler.js"
 
 export async function authentication(req, res, next) {
@@ -10,7 +11,7 @@ export async function authentication(req, res, next) {
     return next(new ErrorMessage("You must be logged in to access this resource.", 401))
   }
   let user
-  const payload = jwt.verify(token, process.env.JWT_SECRET ?? "")
+  const payload = jwt.verify(token, config.JWT_SECRET ?? "")
   if (payload) {
     try {
       user = await UserModel.findByUsername(payload["username"])

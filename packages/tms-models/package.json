@@ -1,6 +1,6 @@
 {
   "name": "@han-keong/tms-models",
-  "version": "1.0.3",
+  "version": "2.0.0",
   "description": "Database models for the Task Management System",
   "license": "ISC",
   "author": "Xie Han Keong",
@@ -14,12 +14,10 @@
     "test": "echo \"No tests here yet\""
   },
   "dependencies": {
-    "@han-keong/tms-db": "^1.0.3",
-    "@han-keong/tms-helpers": "^1.0.3",
-    "@han-keong/tms-types": "^1.0.3",
-    "@han-keong/tms-validators": "^1.0.3"
-  },
-  "publishConfig": {
-    "access": "public"
+    "@han-keong/tms-db": "^2.0.0",
+    "@han-keong/tms-helpers": "^2.0.0",
+    "@han-keong/tms-types": "^2.0.0",
+    "@han-keong/tms-validators": "^2.0.0"
   }
 }
+

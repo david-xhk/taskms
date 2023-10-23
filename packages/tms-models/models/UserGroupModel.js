@@ -18,7 +18,7 @@ export default class UserGroupModel extends UserGroup {
    * @returns {Promise<void>}
    */
   static insertMany(args) {
-    const sql = insertSql("`user_groups`", ["`username`", "`group`"])
+    const sql = insertSql("`User_Group`", ["`username`", "`group`"])
     const values = args.map(({ username, group }) => [username, group])
 
     return new Promise((resolve, reject) => {
@@ -39,7 +39,7 @@ export default class UserGroupModel extends UserGroup {
    * @returns {Promise<UserGroupModel[]>}
    */
   static findByUsername(username) {
-    const sql = selectSql("`user_groups`", { where: "`username` = ?" })
+    const sql = selectSql("`User_Group`", { where: "`username` = ?", orderBy: "`created_at` DESC" })
 
     return new Promise((resolve, reject) => {
       db.query(sql, username, (err, res) => {
@@ -57,7 +57,7 @@ export default class UserGroupModel extends UserGroup {
    * @returns {Promise<UserGroupModel[]>}
    */
   static findByGroup(group) {
-    const sql = selectSql("`user_groups`", { where: "`group` = ?" })
+    const sql = selectSql("`User_Group`", { where: "`group` = ?", orderBy: "`created_at` DESC" })
 
     return new Promise((resolve, reject) => {
       db.query(sql, group, (err, res) => {
@@ -88,7 +88,7 @@ export default class UserGroupModel extends UserGroup {
    * @returns {Promise<boolean>}
    */
   static userGroupsExist(args) {
-    const sql = selectExistsSql("`user_groups`", "(`username`, `group`) IN ?")
+    const sql = selectExistsSql("`User_Group`", "(`username`, `group`) IN ?")
     const values = args.map(({ username, group }) => [username, group])
 
     return new Promise((resolve, reject) => {
@@ -120,7 +120,7 @@ export default class UserGroupModel extends UserGroup {
    * @returns {Promise<boolean>}
    */
   static userGroupsNotExist(args) {
-    const sql = selectNotExistsSql("`user_groups`", "(`username`, `group`) IN ?")
+    const sql = selectNotExistsSql("`User_Group`", "(`username`, `group`) IN ?")
     const values = args.map(({ username, group }) => [username, group])
 
     return new Promise((resolve, reject) => {
@@ -149,7 +149,7 @@ export default class UserGroupModel extends UserGroup {
    * @returns {Promise<void>}
    */
   static deleteMany(args) {
-    const sql = deleteSql("`user_groups`", "(`username`, `group`) IN ?")
+    const sql = deleteSql("`User_Group`", "(`username`, `group`) IN ?")
     const values = args.map(({ username, group }) => [username, group])
 
     return new Promise((resolve, reject) => {

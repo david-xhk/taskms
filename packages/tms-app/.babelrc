@@ -1,0 +1,4 @@
+{
+  "presets": ["@babel/preset-react"],
+  "plugins": [["webpack-alias", { "config": "${PWD}/webpack.config.js" }]]
+}

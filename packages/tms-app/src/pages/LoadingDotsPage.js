@@ -1,12 +1,15 @@
 import React from "react"
 
-import LoadingDots from "../components/LoadingDots.js"
-import Page from "./Page.js"
+import Page from "./Page"
 
 export default function LoadingDotsPage(props) {
   return (
     <Page {...props}>
-      <LoadingDots page />
+      <div className="centered-overlay">
+        <div className="dots-loading">
+          <div></div>
+        </div>
+      </div>
     </Page>
   )
 }

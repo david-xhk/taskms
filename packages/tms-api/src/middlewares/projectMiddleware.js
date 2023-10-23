@@ -1,11 +1,10 @@
 import { parseArray, parseDate } from "@han-keong/tms-helpers/parseHelper"
 import ProjectModel from "@han-keong/tms-models/ProjectModel"
-import { validateGroupsExist } from "@han-keong/tms-models/validators/groupValidator"
-import { validateGroups } from "@han-keong/tms-validators/groupValidator"
-import { validateDate, validateDescription, validateProject } from "@han-keong/tms-validators/projectValidator"
-import { nullable } from "@han-keong/tms-validators/validators"
+import { nullable } from "@han-keong/tms-validators"
 
-import { ErrorMessage, ForbiddenError, ValidationError } from "./errorHandler.js"
+import { validateGroups, validateGroupsExist } from "../validators/groupValidator.js"
+import { validateDate, validateDescription, validateProject } from "../validators/projectValidator.js"
+import { ErrorMessage, ValidationError } from "./errorHandler.js"
 import parseRequest from "./parseRequest.js"
 import validateRequest, { validateParam } from "./validateRequest.js"
 
@@ -33,10 +32,7 @@ export const updateProjectMiddleware = [
       description: nullable(validateDescription)
     },
     {
-      precondition: (body, req, res) => {
-        if (req.user.username !== res.locals.project.createdBy) {
-          return new ForbiddenError()
-        }
+      precondition: body => {
         const { permitCreate, permitOpen, permitTodo, permitDoing, permitDone, startDate, endDate, description } = body
         if (permitCreate === undefined && permitOpen === undefined && permitTodo === undefined && permitDoing === undefined && permitDone === undefined && startDate === undefined && endDate === undefined && description === undefined) {
           return new ErrorMessage("Nothing to update.", 400)
@@ -50,11 +46,11 @@ export const updateProjectMiddleware = [
             return ValidationError.fromErrors({ startDate: "startDate must be before endDate" })
           }
         } else if (startDate && !endDate) {
-          if (startDate > res.locals.project.endDate) {
+          if (res.locals.project.endDate && startDate > res.locals.project.endDate) {
             return ValidationError.fromErrors({ startDate: "startDate must be before current endDate" })
           }
         } else if (!startDate && endDate) {
-          if (res.locals.project.startDate > endDate) {
+          if (res.locals.project.startDate && res.locals.project.startDate > endDate) {
             return ValidationError.fromErrors({ endDate: "endDate must be after current startDate" })
           }
         }

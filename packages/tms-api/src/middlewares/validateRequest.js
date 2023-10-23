@@ -1,24 +1,24 @@
-import { hasError, hasErrors } from "@han-keong/tms-validators/validators"
+import { hasError, hasErrors } from "@han-keong/tms-validators"
 
 import { ForbiddenError, ValidationError } from "./errorHandler.js"
 
 export default function validateRequest(source, args, options) {
   const { precondition, postcondition } = options ?? {}
-  /** @type {[string, { precondition, required, shouldValidate, validators, postcondition }][]} */
+  /** @type {[string, { required, shouldValidate, validators, precondition, postcondition }][]} */
   const entries = Object.entries(args ?? {}).map(([key, value]) => {
-    let precondition, required, shouldValidate, validators, postcondition
+    let required, shouldValidate, validators, precondition, postcondition
     if (Array.isArray(value)) {
       validators = value
     } else if (typeof value !== "object") {
       validators = [value]
     } else {
-      precondition = value.precondition
       required = value.required
       shouldValidate = value.shouldValidate
       validators = value.validators
+      precondition = value.precondition
       postcondition = value.postcondition
     }
-    return [key, { precondition, required, shouldValidate, validators, postcondition }]
+    return [key, { required, shouldValidate, validators, precondition, postcondition }]
   })
   return async function validateRequestInner(req, res, next) {
     if (precondition) {
@@ -28,15 +28,15 @@ export default function validateRequest(source, args, options) {
       }
     }
     const result = {}
-    for (let [key, { precondition, required, shouldValidate, validators, postcondition }] of entries) {
+    for (let [key, { required, shouldValidate, validators, precondition, postcondition }] of entries) {
+      if (!required && (req[source][key] === undefined || (shouldValidate !== undefined && !(await shouldValidate(req[source][key], req, res))))) {
+        continue
+      }
       if (precondition) {
         const err = await precondition(req[source][key], req, res)
         if (err instanceof Error) {
           return next(err)
         }
-      }
-      if (!required && (req[source][key] === undefined || (shouldValidate !== undefined && !(await shouldValidate(req[source][key], req, res))))) {
-        continue
       }
       for (let validator of validators) {
         try {
@@ -68,27 +68,27 @@ export default function validateRequest(source, args, options) {
 }
 
 export function validateParam(args) {
-  let precondition, shouldValidate, key, validators, postcondition
+  let key, shouldValidate, validators, precondition, postcondition
   if (Array.isArray(args)) {
     validators = args
   } else if (typeof args !== "object") {
     validators = [args]
   } else {
-    precondition = args.precondition
-    shouldValidate = args.shouldValidate
     key = args.key
+    shouldValidate = args.shouldValidate
     validators = args.validators ?? []
+    precondition = args.precondition
     postcondition = args.postcondition
   }
   return async function validateParamInner(req, res, next, param) {
+    if (shouldValidate !== undefined && !(await shouldValidate(param, req, res))) {
+      return next()
+    }
     if (precondition) {
       const err = await precondition(param, req, res)
       if (err instanceof Error) {
         return next(err)
       }
-    }
-    if (shouldValidate !== undefined && !(await shouldValidate(param, req, res))) {
-      return
     }
     const result = {}
     for (let validator of validators) {
@@ -114,7 +114,7 @@ export function validateParam(args) {
 }
 
 export function currentUserIsAdmin(_, req) {
-  if (!req.user.isAdmin()) {
+  if (!req.user.isAdmin) {
     return new ForbiddenError()
   }
 }

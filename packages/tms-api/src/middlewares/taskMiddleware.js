@@ -1,6 +1,6 @@
-import { validatePlan, validateTaskNum, validateTaskState } from "@han-keong/tms-validators/projectValidator"
-import { nullable } from "@han-keong/tms-validators/validators"
+import { nullable } from "@han-keong/tms-validators"
 
+import { validatePlan, validateTaskNum, validateTaskState } from "../validators/projectValidator.js"
 import { ErrorMessage, ForbiddenError, ValidationError } from "./errorHandler.js"
 import validateRequest, { validateParam } from "./validateRequest.js"
 
@@ -22,33 +22,18 @@ export const updateTaskMiddleware = [
       state: {
         validators: [validateTaskState],
         postcondition: (state, req, res) => {
-          let valid = false
-          switch (res.locals.task.state) {
-            case "open":
-              valid = ["open", "todo"].includes(state)
-              break
-            case "todo":
-              valid = ["todo", "doing"].includes(state)
-              break
-            case "doing":
-              valid = ["todo", "doing", "done"].includes(state)
-              break
-            case "done":
-              valid = ["doing", "done", "closed"].includes(state)
-              break
-          }
-          if (!valid) {
+          if (!res.locals.task.isValidTransition(state)) {
             return ValidationError.fromErrors({ state: "State transition not allowed." }, 403)
           }
         }
       },
       plan: {
+        validators: [nullable(validatePlan)],
         precondition: (_, __, res) => {
           if (!["open", "done"].includes(res.locals.task.state)) {
             return ValidationError.fromErrors({ plan: "Plan update not allowed." }, 403)
           }
         },
-        validators: [nullable(validatePlan)],
         postcondition: async (plan, req, res) => {
           if (plan !== null) {
             if (await res.locals.project.planNotExists(plan)) {

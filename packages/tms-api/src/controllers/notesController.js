@@ -3,7 +3,7 @@ export async function createNote(req, res, next) {
   const { content } = req.body
   const { task } = res.locals
   try {
-    await task.createNote(content, username)
+    await task.createNote(content, "user note", username)
     res.json({ success: true })
   } catch (err) {
     next(err)

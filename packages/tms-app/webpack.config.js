@@ -1,53 +1,39 @@
-import { CleanWebpackPlugin } from "clean-webpack-plugin"
-import Dotenv from "dotenv-webpack"
-import HtmlWebpackHarddiskPlugin from "html-webpack-harddisk-plugin"
-import HtmlWebpackPlugin from "html-webpack-plugin"
-import NodePolyfillPlugin from "node-polyfill-webpack-plugin"
-import { resolve } from "path"
+const { CleanWebpackPlugin } = require("clean-webpack-plugin")
+const Dotenv = require("dotenv-webpack")
+const { copyFileSync } = require("fs")
+const { resolve } = require("path")
 
 const currentTask = process.env.npm_lifecycle_event
 
 const config = {
-  entry: resolve("./src/Main.js"),
+  entry: resolve(__dirname, "src/Main.js"),
   output: {
     publicPath: "/",
-    path: resolve("./src"),
+    path: resolve(__dirname, "src"),
     filename: "bundled.js"
   },
-  plugins: [new Dotenv({ systemvars: true }), new NodePolyfillPlugin()],
+  plugins: [new Dotenv({ systemvars: true })],
   module: {
     rules: [
       {
-        test: /\.css$/i,
-        use: ["style-loader", "css-loader"]
-      },
-      {
         test: /\.js$/,
-        exclude: /(node_modules)/,
-        use: {
-          loader: "babel-loader",
-          options: {
-            presets: ["@babel/preset-react", "@babel/preset-env"]
-          }
-        }
+        exclude: /node_modules(?!\/@han-keong)/,
+        use: { loader: "babel-loader", options: { rootMode: "upward" } }
       }
     ]
+  },
+  resolve: {
+    alias: {
+      src: resolve(__dirname, "src")
+    }
   }
 }
 
 if (currentTask === "start:dev") {
   config.mode = "development"
-  config.plugins.push(
-    new HtmlWebpackPlugin({
-      template: resolve("./src/index-template.html"),
-      filename: resolve("./src/index.html"),
-      alwaysWriteToDisk: true
-    }),
-    new HtmlWebpackHarddiskPlugin()
-  )
   config.devtool = "source-map"
   config.devServer = {
-    static: resolve("./src"),
+    static: resolve(__dirname, "src"),
     hot: true,
     historyApiFallback: { index: "index.html" },
     port: 3000
@@ -56,30 +42,20 @@ if (currentTask === "start:dev") {
 
 if (currentTask === "build") {
   config.mode = "production"
-  config.plugins.push(
-    new HtmlWebpackPlugin({
-      template: resolve("./src/index-template.html"),
-      filename: resolve("./dist/index.html"),
-      alwaysWriteToDisk: true
-    }),
-    new HtmlWebpackHarddiskPlugin(),
-    new CleanWebpackPlugin(),
-    {
-      apply(compiler) {
-        compiler.hooks.done.tap("Copy files", function () {
-          import("fs").then(({ default: fs }) => {
-            fs.copyFileSync("./src/main.css", "./dist/main.css")
-          })
-        })
-      }
+  config.plugins.push(new CleanWebpackPlugin(), {
+    apply(compiler) {
+      compiler.hooks.done.tap("Copy files", function () {
+        copyFileSync("./src/index.html", "./dist/index.html")
+        copyFileSync("./src/main.css", "./dist/main.css")
+      })
     }
-  )
+  })
   config.output = {
     publicPath: "/",
-    path: resolve("./dist"),
+    path: resolve(__dirname, "dist"),
     filename: "[name].[chunkhash].js",
     chunkFilename: "[name].[chunkhash].js"
   }
 }
 
-export default config
+module.exports = config

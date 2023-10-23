@@ -2,11 +2,9 @@ import bcrypt from "bcryptjs"
 
 import { parseArray, parseBoolean } from "@han-keong/tms-helpers/parseHelper"
 import UserModel from "@han-keong/tms-models/UserModel"
-import { validateGroupsExist } from "@han-keong/tms-models/validators/groupValidator"
-import { validateEmailNotExists } from "@han-keong/tms-models/validators/userValidator"
-import { validateGroups } from "@han-keong/tms-validators/groupValidator"
-import { validateActive, validateEmail, validatePassword, validateUsername } from "@han-keong/tms-validators/userValidator"
 
+import { validateGroups, validateGroupsExist } from "../validators/groupValidator.js"
+import { validateActive, validateEmail, validateEmailNotExists, validatePassword, validateUsername } from "../validators/userValidator.js"
 import { ErrorMessage, ValidationError } from "./errorHandler.js"
 import parseRequest from "./parseRequest.js"
 import validateRequest, { currentUserIsAdmin, validateParam } from "./validateRequest.js"
@@ -30,12 +28,12 @@ export const updateUserMiddleware = [
     "body",
     {
       email: {
-        shouldValidate: (email, req, res) => email !== res.locals.user.email,
+        shouldValidate: (email, req, res) => email !== null && email !== res.locals.user.email,
         validators: [validateEmail, validateEmailNotExists]
       },
       password: validatePassword,
-      active: { precondition: currentUserIsAdmin, validators: [validateActive] },
-      groups: { precondition: currentUserIsAdmin, validators: [validateGroups, validateGroupsExist] }
+      active: { validators: [validateActive], precondition: currentUserIsAdmin },
+      groups: { validators: [validateGroups, validateGroupsExist], precondition: currentUserIsAdmin }
     },
     {
       precondition: body => {
@@ -55,9 +53,9 @@ export const updateUserMiddleware = [
 ]
 
 export const validateUsernameParam = validateParam({
-  precondition: currentUserIsAdmin,
   shouldValidate: (username, req) => username !== req.user.username,
   validators: [validateUsername],
+  precondition: currentUserIsAdmin,
   postcondition: async username => {
     if (await UserModel.usernameNotExists(username)) {
       return ValidationError.fromErrors({ username: "User not found." }, 404)

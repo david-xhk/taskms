@@ -1,4 +1,5 @@
 export * from "./helpers/arrayHelper.js"
+export * from "./helpers/funcHelper.js"
 export * from "./helpers/objectHelper.js"
 export * from "./helpers/parseHelper.js"
 export * from "./helpers/sqlHelper.js"

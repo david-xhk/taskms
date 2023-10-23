@@ -22,10 +22,11 @@ export default class ProjectTaskModel extends ProjectTask {
 
   /**
    * @param {string} content
+   * @param {"update task" | "user note"} noteType
    * @param {string} createdBy
    */
-  createNote(content, createdBy) {
-    return TaskNoteModel.insertOne(this.taskId, content, createdBy)
+  createNote(content, noteType, createdBy) {
+    return TaskNoteModel.insertOne(this.taskId, content, noteType, createdBy)
   }
 
   /**
@@ -76,7 +77,7 @@ export default class ProjectTaskModel extends ProjectTask {
    * @returns {Promise<void>}
    */
   static insertMany(args) {
-    const sql = insertSql("`project_tasks`", ["`project_name`", "`task_name`", "`description`", "`plan_name`", "`created_by`"])
+    const sql = insertSql("`Task`", ["`Task_app_Acronym`", "`Task_name`", "`Task_description`", "`Task_plan`", "`Task_creator`"])
     const values = args.map(({ project, task, description, plan, createdBy }) => [project, task, description, plan, createdBy])
 
     return new Promise((resolve, reject) => {
@@ -97,7 +98,7 @@ export default class ProjectTaskModel extends ProjectTask {
    * @returns {Promise<ProjectTaskModel?>}
    */
   static findByTaskId(taskId) {
-    const sql = selectSql("`project_tasks`", { where: "`task_id` = ?" })
+    const sql = selectSql("`Task`", { where: "`Task_id` = ?" })
 
     return new Promise((resolve, reject) => {
       db.query(sql, taskId, (err, res) => {
@@ -179,39 +180,40 @@ export default class ProjectTaskModel extends ProjectTask {
     const where = []
     const values = []
     if (q !== undefined) {
-      where.push("`task_name` LIKE ?")
+      where.push("`Task_name` LIKE ?")
       values.push(`%${q}%`)
     }
     if (project !== undefined) {
-      where.push("`project_name` = ?")
+      where.push("`Task_app_Acronym` = ?")
       values.push(project)
     }
     if (plan !== undefined) {
-      where.push("`plan_name` = ?")
+      where.push("`Task_plan` = ?")
       values.push(plan)
     }
     if (state !== undefined) {
-      where.push("`state` = ?")
+      where.push("`Task_state` = ?")
       values.push(state)
     }
     if (createdBy !== undefined) {
-      where.push("`created_by` = ?")
+      where.push("`Task_creator` = ?")
       values.push(createdBy)
     }
     if (updatedBy !== undefined) {
-      where.push("`updated_by` = ?")
+      where.push("`Task_owner` = ?")
       values.push(updatedBy)
     }
     if (where.length > 0) {
       options.where = where.join(" AND ")
     }
+    options.orderBy = "`Task_createDate` DESC"
     if (limit !== undefined) {
       options.limit = limit
       if (offset !== undefined) {
         options.offset = offset
       }
     }
-    const sql = selectSql("`project_tasks`", options)
+    const sql = selectSql("`Task`", options)
 
     return new Promise((resolve, reject) => {
       db.query(sql, values, (err, res) => {
@@ -229,7 +231,7 @@ export default class ProjectTaskModel extends ProjectTask {
    * @returns {Promise<boolean>}
    */
   static taskIdExists(taskId) {
-    const sql = selectExistsSql("`project_tasks`", "`task_id` = ?")
+    const sql = selectExistsSql("`Task`", "`Task_id` = ?")
 
     return new Promise((resolve, reject) => {
       db.query(sql, taskId, (err, res) => {
@@ -247,7 +249,7 @@ export default class ProjectTaskModel extends ProjectTask {
    * @returns {Promise<boolean>}
    */
   static taskIdNotExists(taskId) {
-    const sql = selectNotExistsSql("`project_tasks`", "`task_id` = ?")
+    const sql = selectNotExistsSql("`Task`", "`Task_id` = ?")
 
     return new Promise((resolve, reject) => {
       db.query(sql, taskId, (err, res) => {
@@ -273,16 +275,16 @@ export default class ProjectTaskModel extends ProjectTask {
     const columns = []
     const values = []
     if (state !== undefined) {
-      columns.push("`state`")
+      columns.push("`Task_state`")
       values.push(state)
     }
     if (plan !== undefined) {
-      columns.push("`plan_name`")
+      columns.push("`Task_plan`")
       values.push(plan)
     }
-    columns.push("`updated_by`")
+    columns.push("`Task_owner`")
     values.push(updatedBy)
-    const sql = updateSql("`project_tasks`", columns, "`task_id` = ?")
+    const sql = updateSql("`Task`", columns, "`Task_id` = ?")
     values.push(taskId)
 
     return new Promise((resolve, reject) => {

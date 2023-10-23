@@ -2,9 +2,10 @@ import bcrypt from "bcryptjs"
 import jwt from "jsonwebtoken"
 
 import UserModel from "@han-keong/tms-models/UserModel"
-import { validatePassword, validateUsername } from "@han-keong/tms-validators/userValidator"
 
+import config from "../config.js"
 import { ErrorMessage } from "../middlewares/errorHandler.js"
+import { validatePassword, validateUsername } from "../validators/userValidator.js"
 
 export async function loginUser(req, res, next) {
   const { username, password } = req.body
@@ -28,13 +29,13 @@ export function logoutUser(req, res) {
 }
 
 function getJwtToken(payload) {
-  return jwt.sign(payload, process.env.JWT_SECRET, { expiresIn: process.env.JWT_EXPIRES_TIME })
+  return jwt.sign(payload, config.JWT_SECRET, { expiresIn: config.JWT_EXPIRES_TIME })
 }
 
 function setJwtCookie(res, token) {
   let expiresTime = Date.now()
   if (token) {
-    expiresTime += process.env.COOKIE_EXPIRES_DAYS * 24 * 60 * 60 * 1000
+    expiresTime += config.COOKIE_EXPIRES_DAYS * 24 * 60 * 60 * 1000
   }
   res.cookie("token", token || "none", { expires: new Date(expiresTime), httpOnly: true, sameSite: "none", secure: true })
 }
