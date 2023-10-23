@@ -25,14 +25,13 @@ const startOfHTML = `<!DOCTYPE html>
       <div id="app">`
 
 const endOfHTML = `</div>
-      <script src="/bundled.js"></script>
     </body>
   </html>`
 
 /* Use Node tools (outside the scope of this course) to setup a
   stream we can write to that saves to a file on our hard drive
 */
-const fileName = "./src/index.html"
+const fileName = "./src/index-template.html"
 const writeStream = fs.createWriteStream(fileName)
 
 // Add the start of our HTML template to the stream
@@ -45,7 +44,7 @@ writeStream.write(startOfHTML)
   of HTML text that a Node stream can leverage.
 */
 const myStream = renderToPipeableStream(
-  <Router location="/">
+  <Router basename="/">
     <Navbar static />
     <LoadingDotsPage />
     <Footer />

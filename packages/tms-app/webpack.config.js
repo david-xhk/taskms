@@ -1,7 +1,9 @@
-const { CleanWebpackPlugin } = require("clean-webpack-plugin")
-const Dotenv = require("dotenv-webpack")
 const { copyFileSync } = require("fs")
 const { resolve } = require("path")
+const { CleanWebpackPlugin } = require("clean-webpack-plugin")
+const Dotenv = require("dotenv-webpack")
+const HtmlWebpackHarddiskPlugin = require("html-webpack-harddisk-plugin")
+const HtmlWebpackPlugin = require("html-webpack-plugin")
 
 const currentTask = process.env.npm_lifecycle_event
 
@@ -12,7 +14,15 @@ const config = {
     path: resolve(__dirname, "src"),
     filename: "bundled.js"
   },
-  plugins: [new Dotenv({ systemvars: true })],
+  plugins: [
+    new Dotenv({ systemvars: true }),
+    new HtmlWebpackPlugin({
+      filename: "index.html",
+      template: "./src/index-template.html",
+      alwaysWriteToDisk: true
+    }),
+    new HtmlWebpackHarddiskPlugin()
+  ],
   module: {
     rules: [
       {
@@ -45,7 +55,6 @@ if (currentTask === "build") {
   config.plugins.push(new CleanWebpackPlugin(), {
     apply(compiler) {
       compiler.hooks.done.tap("Copy files", function () {
-        copyFileSync("./src/index.html", "./dist/index.html")
         copyFileSync("./src/main.css", "./dist/main.css")
       })
     }
