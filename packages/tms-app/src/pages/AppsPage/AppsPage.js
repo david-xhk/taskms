@@ -49,7 +49,7 @@ export default function AppsPage() {
             apps.map((app, index) => <ViewAppTableRow app={app} key={index} />)
           ) : (
             <Table.Row>
-              <Table.Cell colSpan={4} style={{ padding: "11px 3px" }}>
+              <Table.Cell colSpan={6} style={{ padding: "11px 3px" }}>
                 <span className="text-muted">No applications found.</span>
               </Table.Cell>
             </Table.Row>
