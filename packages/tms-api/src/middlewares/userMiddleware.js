@@ -1,10 +1,11 @@
 import bcrypt from "bcryptjs"
 
 import { parseArray, parseBoolean } from "@han-keong/tms-helpers/parseHelper"
-import UserModel from "@han-keong/tms-models/UserModel"
 
+import UserModel from "../models/UserModel.js"
 import { validateGroups, validateGroupsExist } from "../validators/groupValidator.js"
 import { validateActive, validateEmail, validateEmailNotExists, validatePassword, validateUsername } from "../validators/userValidator.js"
+
 import { ErrorMessage, ValidationError } from "./errorHandler.js"
 import parseRequest from "./parseRequest.js"
 import validateRequest, { currentUserIsAdmin, validateParam } from "./validateRequest.js"

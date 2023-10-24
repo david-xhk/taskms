@@ -45,8 +45,9 @@ import useInsertionCallback from "src/hooks/useInsertionCallback"
 export default function useFormInput(args) {
   const { key, initialValue, result = {}, required = false, nullable = false, immediately, afterDelay } = args
 
+  const defaultValid = immediately && ((typeof initialValue === "string" && initialValue === "") || (Array.isArray(initialValue) && initialValue.length === 0) || (typeof initialValue === "number" && initialValue === 0)) ? null : true
   const [dirty, setDirty] = useState(false)
-  const [valid, setValid] = useState(/** @type {boolean?} */ (immediately && typeof initialValue === "string" && !initialValue ? null : true))
+  const [valid, setValid] = useState(defaultValid)
   const [value, setValue] = useState(initialValue)
   const delay = useRef(/** @type {NodeJS.Timeout?} */ (null))
 
@@ -117,7 +118,7 @@ export default function useFormInput(args) {
 
   const reset = useInsertionCallback((keepCurrentValues = false) => {
     setDirty(false)
-    setValid(immediately && typeof initialValue === "string" && !initialValue ? null : true)
+    setValid(defaultValid)
     if (!keepCurrentValues) {
       setValue(initialValue)
     }

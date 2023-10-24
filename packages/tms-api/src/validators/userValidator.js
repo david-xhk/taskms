@@ -1,5 +1,6 @@
-import UserModel from "@han-keong/tms-models/UserModel"
 import { composeAll, composeAny, containsAlphabetsDigitsAndSpecialOnly, containsAlphabetsOrDigitsOnly, createAsyncValidator, isBoolean, isBooleanNumber, isBooleanString, isNonEmptyString, isProvided, isString, matchesEmailAddress, notLongerThan, notShorterThan, nullable } from "@han-keong/tms-validators"
+
+import UserModel from "../models/UserModel.js"
 
 export const validateUsername = composeAll([isProvided, isString, containsAlphabetsOrDigitsOnly, notShorterThan(2), notLongerThan(32)], { key: "username" })
 

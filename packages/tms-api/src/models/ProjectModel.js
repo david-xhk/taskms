@@ -1,6 +1,7 @@
-import db from "@han-keong/tms-db"
 import { insertSql, selectExistsSql, selectNotExistsSql, selectSql, updateSql } from "@han-keong/tms-helpers/sqlHelper"
 import Project from "@han-keong/tms-types/Project"
+
+import db from "../database.js"
 
 import ProjectPermitModel from "./ProjectPermitModel.js"
 import ProjectPlanModel from "./ProjectPlanModel.js"

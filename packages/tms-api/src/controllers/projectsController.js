@@ -1,6 +1,7 @@
 import { capitalize } from "@han-keong/tms-helpers/stringHelper"
-import ProjectModel from "@han-keong/tms-models/ProjectModel"
-import ProjectPermitModel from "@han-keong/tms-models/ProjectPermitModel"
+
+import ProjectModel from "../models/ProjectModel.js"
+import ProjectPermitModel from "../models/ProjectPermitModel.js"
 
 export async function createProject(req, res, next) {
   const { username } = req.user

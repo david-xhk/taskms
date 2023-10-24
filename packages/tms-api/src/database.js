@@ -3,6 +3,8 @@ import mysql from "mysql2"
 import { parseOrCreateArray } from "@han-keong/tms-helpers/parseHelper"
 import { colorWords, formatColor } from "@han-keong/tms-helpers/stringHelper"
 
+import config from "./config.js"
+
 class Database {
   constructor() {
     this.pool = undefined
@@ -46,8 +48,12 @@ class Database {
         sql = colorWords(sql, "red", 1)
         break
     }
-    const stack = this.getStack()
-    console.log(`${type}|${sql}|${stack}`)
+    switch (config.NODE_ENV) {
+      case "production":
+        return console.log(`${type}|${sql}`)
+      case "development":
+        return console.log(`${type}|${sql}|${this.getStack()}`)
+    }
   }
 
   getStack() {

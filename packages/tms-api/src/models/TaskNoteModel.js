@@ -1,6 +1,7 @@
-import db from "@han-keong/tms-db"
 import { insertSql, selectExistsSql, selectNotExistsSql, selectSql } from "@han-keong/tms-helpers/sqlHelper"
 import TaskNote from "@han-keong/tms-types/TaskNote"
+
+import db from "../database.js"
 
 export default class TaskNoteModel extends TaskNote {
   /**

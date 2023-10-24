@@ -1,7 +1,6 @@
-import UserModel from "@han-keong/tms-models/UserModel"
-
 import config from "../config.js"
 import { sendEmail } from "../helpers/emailHelper.js"
+import UserModel from "../models/UserModel.js"
 
 export function getTask(req, res) {
   const { task } = res.locals

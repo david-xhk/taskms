@@ -1,6 +1,7 @@
 import { nullable } from "@han-keong/tms-validators"
 
 import { validateDescription, validateNoteContent, validatePlan, validateTask } from "../validators/projectValidator.js"
+
 import { ForbiddenError, ValidationError } from "./errorHandler.js"
 import validateRequest from "./validateRequest.js"
 

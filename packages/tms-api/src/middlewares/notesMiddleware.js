@@ -1,4 +1,5 @@
 import { validateNoteContent } from "../validators/projectValidator.js"
+
 import { ForbiddenError } from "./errorHandler.js"
 import validateRequest from "./validateRequest.js"
 

@@ -1,6 +1,7 @@
-import db from "@han-keong/tms-db"
 import { deleteSql, insertSql, selectExistsSql, selectNotExistsSql, selectSql } from "@han-keong/tms-helpers/sqlHelper"
 import UserGroup from "@han-keong/tms-types/UserGroup"
+
+import db from "../database.js"
 
 export default class UserGroupModel extends UserGroup {
   /**

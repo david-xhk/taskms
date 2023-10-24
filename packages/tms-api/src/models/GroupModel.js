@@ -1,6 +1,7 @@
-import db from "@han-keong/tms-db"
 import { insertSql, selectExistsSql, selectNotExistsSql, selectSql } from "@han-keong/tms-helpers/sqlHelper"
 import Group from "@han-keong/tms-types/Group"
+
+import db from "../database.js"
 
 export default class GroupModel extends Group {
   /**

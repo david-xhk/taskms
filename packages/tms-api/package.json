@@ -1,6 +1,6 @@
 {
   "name": "@han-keong/tms-api",
-  "version": "2.0.0",
+  "version": "2.1.0",
   "description": "API service for the Task Management System",
   "license": "ISC",
   "author": "Xie Han Keong",
@@ -12,9 +12,8 @@
     "start": "node ./src/app.js"
   },
   "dependencies": {
-    "@han-keong/tms-db": "^2.0.0",
     "@han-keong/tms-helpers": "^2.0.0",
-    "@han-keong/tms-models": "^2.0.0",
+    "@han-keong/tms-types": "^2.0.0",
     "@han-keong/tms-validators": "^2.0.0",
     "bcryptjs": "^2.4.3",
     "cookie-parser": "^1.4.6",
@@ -22,7 +21,7 @@
     "dotenv": "^16.3.1",
     "express": "^4.18.2",
     "jsonwebtoken": "^9.0.2",
-    "nodemailer": "^6.9.6"
+    "mysql2": "^3.6.2",
+    "nodemailer": "^6.9.7"
   }
 }
-

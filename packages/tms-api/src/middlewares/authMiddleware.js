@@ -1,8 +1,8 @@
 import jwt from "jsonwebtoken"
 
-import UserModel from "@han-keong/tms-models/UserModel"
-
 import config from "../config.js"
+import UserModel from "../models/UserModel.js"
+
 import { ErrorMessage, ForbiddenError } from "./errorHandler.js"
 
 export async function authentication(req, res, next) {

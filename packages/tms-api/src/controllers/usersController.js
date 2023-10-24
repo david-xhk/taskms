@@ -1,5 +1,5 @@
-import UserGroupModel from "@han-keong/tms-models/UserGroupModel"
-import UserModel from "@han-keong/tms-models/UserModel"
+import UserGroupModel from "../models/UserGroupModel.js"
+import UserModel from "../models/UserModel.js"
 
 export async function createUser(req, res, next) {
   const { username, email = null, password, active, groups } = req.body

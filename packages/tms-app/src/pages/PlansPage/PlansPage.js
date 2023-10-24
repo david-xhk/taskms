@@ -5,6 +5,7 @@ import { useNavigate } from "react-router-dom"
 import Header from "src/components/Header"
 import Table from "src/components/Table"
 import useAppsContext from "src/contexts/AppsContext/useAppsContext"
+import useAuth from "src/contexts/AuthContext/useAuth"
 import useFlashMessage from "src/contexts/FlashMessageContext/useFlashMessage"
 import ProtectedPage from "src/pages/ProtectedPage"
 
@@ -14,10 +15,11 @@ import NewPlanTableRow from "./NewPlanTableRow"
 import ViewPlanTableRow from "./ViewPlanTableRow"
 
 export default function PlansPage() {
+  const auth = useAuth()
   const navigate = useNavigate()
   const flashMessage = useFlashMessage()
   const isSmallScreen = useMediaQuery({ query: "(max-width: 768px)" })
-  const { appName, state, selectedPlan, isLoading, notFound, plans, onViewApp, onNewPlan, onReload } = useAppsContext()
+  const { appName, state, selectedPlan, isLoading, notFound, plans, onViewApp, onEditApp, onNewPlan, onReload } = useAppsContext()
 
   const onRefresh = async () => {
     if (await onReload()) {
@@ -36,7 +38,7 @@ export default function PlansPage() {
         </Header.Title>
         <Header.ButtonGroup>
           <Header.Button name="Create New Plan" icon="fas fa-plus" onClick={() => onNewPlan({ noModal: !isSmallScreen })} disabled={state === "new plan"} />
-          <Header.Button name="View App" icon="fas fa-project-diagram" onClick={() => onViewApp()} />
+          {auth.isProjectLead ? <Header.Button name="Update App" icon="fas fa-project-diagram" onClick={() => onEditApp()} /> : <Header.Button name="View App" icon="fas fa-project-diagram" onClick={() => onViewApp()} />}
           <Header.Button name="Refresh Plans" icon="fas fa-sync-alt" onClick={onRefresh} />
           <Header.Button name="Manage Tasks" icon="fas fa-columns" onClick={() => navigate(`/apps/${appName ?? ""}`)} />
         </Header.ButtonGroup>

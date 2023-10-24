@@ -1,9 +1,10 @@
 import { parseArray, parseDate } from "@han-keong/tms-helpers/parseHelper"
-import ProjectModel from "@han-keong/tms-models/ProjectModel"
 import { nullable } from "@han-keong/tms-validators"
 
+import ProjectModel from "../models/ProjectModel.js"
 import { validateGroups, validateGroupsExist } from "../validators/groupValidator.js"
 import { validateDate, validateDescription, validateProject } from "../validators/projectValidator.js"
+
 import { ErrorMessage, ValidationError } from "./errorHandler.js"
 import parseRequest from "./parseRequest.js"
 import validateRequest, { validateParam } from "./validateRequest.js"

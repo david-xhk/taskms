@@ -13,20 +13,8 @@
       "path": "../packages/tms-app"
     },
     {
-      "name": "tms-db",
-      "path": "../packages/tms-db"
-    },
-    {
       "name": "tms-helpers",
       "path": "../packages/tms-helpers"
-    },
-    {
-      "name": "tms-models",
-      "path": "../packages/tms-models"
-    },
-    {
-      "name": "tms-restful-api",
-      "path": "../packages/tms-restful-api"
     },
     {
       "name": "tms-types",

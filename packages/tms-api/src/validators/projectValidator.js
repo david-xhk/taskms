@@ -1,5 +1,6 @@
-import ProjectModel from "@han-keong/tms-models/ProjectModel"
 import { composeAll, composeAny, containsAlphabetsDigitsOrDashesOnly, containsAlphabetsDigitsSpecialOrSpacesOnly, createAsyncValidator, isDateString, isEither, isHexColourString, isInteger, isIntegerString, isNonEmptyString, isProvided, isString, moreThan, notLessThan, notLongerThan } from "@han-keong/tms-validators"
+
+import ProjectModel from "../models/ProjectModel.js"
 
 export const validateProject = composeAll([isProvided, isNonEmptyString, notLongerThan(32), containsAlphabetsDigitsOrDashesOnly], { key: "project" })
 

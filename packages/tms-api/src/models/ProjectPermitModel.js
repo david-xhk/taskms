@@ -1,6 +1,7 @@
-import db from "@han-keong/tms-db"
 import { deleteSql, insertSql, selectExistsSql, selectNotExistsSql, selectSql } from "@han-keong/tms-helpers/sqlHelper"
 import ProjectPermit from "@han-keong/tms-types/ProjectPermit"
+
+import db from "../database.js"
 
 export default class ProjectPermitModel extends ProjectPermit {
   delete() {

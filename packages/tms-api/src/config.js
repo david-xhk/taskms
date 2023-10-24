@@ -1,7 +1,7 @@
 import dotenv from "dotenv"
 import { existsSync } from "node:fs"
 
-if (process.env.NODE_ENV === "development" && existsSync(".env")) {
+if (existsSync(".env")) {
   console.log("Loading environment variables from file: .env")
   dotenv.config({ path: ".env" })
 }
@@ -9,12 +9,12 @@ if (process.env.NODE_ENV === "development" && existsSync(".env")) {
 export default {
   NODE_ENV: process.env.NODE_ENV || "development",
 
-  PORT: process.env.PORT || "4000",
+  PORT: Number.parseInt(process.env.PORT || "4000"),
 
   DB_HOST: process.env.DB_HOST || "127.0.0.1",
-  DB_USER: process.env.DB_USER || "test",
-  DB_PASSWORD: process.env.DB_PASSWORD || "test",
-  DB_DATABASE: process.env.DB_DATABASE || "tms",
+  DB_USER: process.env.DB_USER || "",
+  DB_PASSWORD: process.env.DB_PASSWORD || "",
+  DB_DATABASE: process.env.DB_DATABASE || "",
 
   SMTP_HOST: process.env.SMTP_HOST || "sandbox.smtp.mailtrap.io",
   SMTP_PORT: Number.parseInt(process.env.SMTP_PORT || "2525"),

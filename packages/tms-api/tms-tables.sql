@@ -295,17 +295,12 @@ BEFORE INSERT ON `Note`
 FOR EACH ROW
 BEGIN
   IF (SELECT EXISTS (SELECT 1 FROM `Task` WHERE `Task_id` = NEW.`Task_id`)) THEN
-    SET @`Task_Rnumber` = (
-      SELECT `num_notes`
-      FROM `Task`
-      WHERE `Task`.`Task_id` = NEW.`Task_id`
-	);
+    SELECT `num_notes`, `Task_state`
+    INTO @`Task_Rnumber`, @`Task_state`
+    FROM `Task`
+    WHERE `Task`.`Task_id` = NEW.`Task_id`;
     SET NEW.`note_id` = CONCAT(NEW.`Task_id`, '_', @`Task_Rnumber` + 1);
-    SET NEW.`task_state` = (
-      SELECT `Task_state`
-      FROM `Task`
-      WHERE `Task`.`Task_id` = NEW.`Task_id`
-	);
+    SET NEW.`task_state` = @`Task_state`;
   ELSE
     SET NEW.`note_id` = CONCAT(NEW.`Task_id`, '_', 0);
   END IF;

@@ -1,6 +1,7 @@
-import db from "@han-keong/tms-db"
 import { insertSql, selectExistsSql, selectNotExistsSql, selectSql, updateSql } from "@han-keong/tms-helpers/sqlHelper"
 import ProjectTask from "@han-keong/tms-types/ProjectTask"
+
+import db from "../database.js"
 
 import TaskNoteModel from "./TaskNoteModel.js"
 

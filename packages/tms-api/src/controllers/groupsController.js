@@ -1,4 +1,4 @@
-import GroupModel from "@han-keong/tms-models/GroupModel"
+import GroupModel from "../models/GroupModel.js"
 
 export async function createGroup(req, res, next) {
   const { group } = req.body

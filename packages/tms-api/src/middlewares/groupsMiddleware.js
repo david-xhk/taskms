@@ -1,4 +1,5 @@
 import { validateGroup, validateGroupNotExists } from "../validators/groupValidator.js"
+
 import validateRequest from "./validateRequest.js"
 
 export const createGroupMiddleware = [

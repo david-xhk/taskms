@@ -526,7 +526,7 @@ export default function AppsProvider(props) {
       return
     }
     if (newNoteForm.isDirty) {
-      newNoteForm.submit()
+      await newNoteForm.submit()
     }
     if (!(await editTaskForm.submit())) {
       return

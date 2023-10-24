@@ -1,6 +1,7 @@
-import db from "@han-keong/tms-db"
 import { insertSql, selectExistsSql, selectNotExistsSql, selectSql, updateSql } from "@han-keong/tms-helpers/sqlHelper"
 import User from "@han-keong/tms-types/User"
+
+import db from "../database.js"
 
 import UserGroupModel from "./UserGroupModel.js"
 

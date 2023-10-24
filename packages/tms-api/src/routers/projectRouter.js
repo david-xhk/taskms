@@ -3,6 +3,7 @@ import { Router } from "express"
 import { getProject, updateProject } from "../controllers/projectController.js"
 import { authorization } from "../middlewares/authMiddleware.js"
 import { project, updateProjectMiddleware, validateProjectParam } from "../middlewares/projectMiddleware.js"
+
 import planRouter from "./planRouter.js"
 import plansRouter from "./plansRouter.js"
 import taskRouter from "./taskRouter.js"

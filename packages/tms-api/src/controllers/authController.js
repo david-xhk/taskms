@@ -1,10 +1,9 @@
 import bcrypt from "bcryptjs"
 import jwt from "jsonwebtoken"
 
-import UserModel from "@han-keong/tms-models/UserModel"
-
 import config from "../config.js"
 import { ErrorMessage } from "../middlewares/errorHandler.js"
+import UserModel from "../models/UserModel.js"
 import { validatePassword, validateUsername } from "../validators/userValidator.js"
 
 export async function loginUser(req, res, next) {

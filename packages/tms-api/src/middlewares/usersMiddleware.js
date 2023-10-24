@@ -4,6 +4,7 @@ import { parseArray, parseBoolean } from "@han-keong/tms-helpers/parseHelper"
 
 import { validateGroups, validateGroupsExist } from "../validators/groupValidator.js"
 import { validateActive, validateEmail, validateEmailNotExists, validatePassword, validateUsername, validateUsernameNotExists } from "../validators/userValidator.js"
+
 import parseRequest from "./parseRequest.js"
 import validateRequest from "./validateRequest.js"
 

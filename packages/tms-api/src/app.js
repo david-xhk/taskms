@@ -2,9 +2,8 @@ import cookieParser from "cookie-parser"
 import cors from "cors"
 import express, { json as bodyParser, urlencoded as urlEncodedParser } from "express"
 
-import db from "@han-keong/tms-db"
-
 import config from "./config.js"
+import db from "./database.js"
 import { authentication, authorization } from "./middlewares/authMiddleware.js"
 import errorHandler, { ErrorMessage } from "./middlewares/errorHandler.js"
 import { logRequest } from "./middlewares/logRequest.js"

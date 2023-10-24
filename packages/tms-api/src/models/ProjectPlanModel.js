@@ -1,6 +1,7 @@
-import db from "@han-keong/tms-db"
 import { insertSql, selectExistsSql, selectNotExistsSql, selectSql, updateSql } from "@han-keong/tms-helpers/sqlHelper"
 import ProjectPlan from "@han-keong/tms-types/ProjectPlan"
+
+import db from "../database.js"
 
 export default class ProjectPlanModel extends ProjectPlan {
   refetch() {

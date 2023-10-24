@@ -1,6 +1,7 @@
-import GroupModel from "@han-keong/tms-models/GroupModel"
-import UserGroupModel from "@han-keong/tms-models/UserGroupModel"
 import { composeAll, composeAny, containsAlphabetsDigitsSpecialOrSpacesOnly, convertToAsyncMappedValidator, convertToMappedValidator, createAsyncValidator, isArray, isCommaSeparatedString, isNonEmptyString, isProvided, notLongerThan } from "@han-keong/tms-validators"
+
+import GroupModel from "../models/GroupModel.js"
+import UserGroupModel from "../models/UserGroupModel.js"
 
 export const validateGroup = composeAll([isProvided, isNonEmptyString, notLongerThan(32), containsAlphabetsDigitsSpecialOrSpacesOnly], { key: "group" })
 
