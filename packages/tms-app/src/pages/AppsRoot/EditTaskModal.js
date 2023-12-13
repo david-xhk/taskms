@@ -129,10 +129,10 @@ export default function EditTaskModal() {
           <Button variant={!newNoteForm.allowSubmit ? "outline-dark" : "dark"} onClick={onConfirmNewNote} disabled={!newNoteForm.allowSubmit}>
             Add Note
           </Button>
-          {/* <DropdownButton id="export-notes-dropdown" title="Export Notes" variant="secondary" as={ButtonGroup}>
+          <DropdownButton id="export-notes-dropdown" title="Export Notes" variant="secondary" as={ButtonGroup}>
             <Dropdown.Item onClick={downloadNotesTxt}>As .txt File</Dropdown.Item>
             <Dropdown.Item onClick={downloadNotesCsv}>As .csv File</Dropdown.Item>
-          </DropdownButton> */}
+          </DropdownButton>
         </ButtonGroup>
         <ButtonGroup>
           {selectedTask && selectedTask.canDemote() && (

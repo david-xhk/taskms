@@ -23,6 +23,7 @@ process.on("uncaughtException", err => {
 
 db.connect({
   host: config.DB_HOST,
+  port: config.DB_PORT,
   user: config.DB_USER,
   password: config.DB_PASSWORD,
   database: config.DB_DATABASE,

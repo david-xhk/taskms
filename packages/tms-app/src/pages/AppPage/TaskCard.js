@@ -55,21 +55,21 @@ export default function TaskCard(props) {
       {canEdit && (
         <Card.Footer className="d-flex flex-grow-0 py-1 px-2">
           <ButtonGroup size="sm">
-            {/* {task.canDemote() && (
+            {task.canDemote() && (
               <Button variant="light" data-tooltip-content={capitalize(task.demoteAlias) + " Task"} data-tooltip-id="my-tooltip" onClick={onDemoteTask} disabled={isUpdating} style={{ fontSize: "0.625rem", padding: "0.1rem 0.3rem" }}>
                 <i className="fas fa-chevron-left"></i>
               </Button>
-            )} */}
+            )}
             {task.state !== "closed" && (
               <Button variant="light" data-tooltip-content="Update Task" data-tooltip-id="my-tooltip" onClick={() => onEditTask({ task })} disabled={isUpdating} style={{ fontSize: "0.625rem", padding: "0.1rem 0.3rem" }}>
                 <i className="fas fa-pen"></i>
               </Button>
             )}
-            {/* {task.canPromote() && (
+            {task.canPromote() && (
               <Button variant="light" data-tooltip-content={capitalize(task.promoteAlias) + " Task"} data-tooltip-id="my-tooltip" onClick={onPromoteTask} disabled={isUpdating} style={{ fontSize: "0.625rem", padding: "0.1rem 0.3rem" }}>
                 <i className="fas fa-chevron-right"></i>
               </Button>
-            )} */}
+            )}
           </ButtonGroup>
         </Card.Footer>
       )}

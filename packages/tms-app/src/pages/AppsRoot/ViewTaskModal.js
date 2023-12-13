@@ -104,12 +104,12 @@ export default function ViewTaskModal() {
           </Stack>
         </Form>
       </Modal.Body>
-      {/* <Modal.Footer>
+      <Modal.Footer>
         <DropdownButton title="Export Notes" variant="secondary" className="me-auto">
           <Dropdown.Item onClick={downloadNotesTxt}>As .txt File</Dropdown.Item>
           <Dropdown.Item onClick={downloadNotesCsv}>As .csv File</Dropdown.Item>
         </DropdownButton>
-      </Modal.Footer> */}
+      </Modal.Footer>
     </Modal>
   )
 }

@@ -41,7 +41,7 @@ export default function Navbar(props) {
   const onLogout = async () => {
     if (await auth.logout()) {
       flashMessage("Until next time!", "info")
-      navigate("/apps")
+      navigate("/")
     }
   }
 
