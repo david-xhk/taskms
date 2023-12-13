@@ -82,7 +82,6 @@ export default function useFormInput(args) {
     /** @type {(value: V | { target: V extends boolean ? { checked: V } : { value: V }} | { currentTarget: V extends boolean ? { checked: V } : { value: V }}) => void} */ (
       value => {
         const newValue = getValue(value)
-        console.log(key, "change", JSON.stringify(newValue))
         deleteError(result, key)
         if (delay.current) {
           clearTimeout(delay.current)

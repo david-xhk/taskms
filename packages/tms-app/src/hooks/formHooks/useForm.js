@@ -75,7 +75,6 @@ export default function useForm(args) {
     for (let input of Object.values(inputs)) {
       valid = input.validate() && valid
     }
-    // console.log(name, "submit", { allowSubmit, isSubmitting, isDirty, isValidating, hasRequiredData, hasErrors, data })
     if (!allowSubmit || !valid) {
       return null
     }

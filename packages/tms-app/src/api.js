@@ -53,19 +53,16 @@ export function endpoint(method, url) {
           if (onSuccess) {
             onSuccess(res)
           }
-        } else {
-          if (onError) {
-            onError(res)
-          }
+        } else if (onError) {
+          onError(res)
         }
       })
       .catch(err => {
-        if (err.response) {
-          if (onError) {
-            onError(err.response)
-          }
-        } else if (config.NODE_ENV === "development") {
+        if (config.NODE_ENV === "development") {
           console.error(err)
+        }
+        if (onError && err.response) {
+          onError(err.response)
         }
       })
       .finally(() => {

@@ -11,9 +11,6 @@ export default function EventEmitterProvider({ children }) {
 
   /** @type {EventEmitter["emit"]} */
   const emit = useCallback((event, ...args) => {
-    if (config.NODE_ENV === "development") {
-      console.log("tms", event, ...args)
-    }
     listeners.current[event]?.forEach(callback => callback(...args))
     listeners.current[event] = []
   }, [])
